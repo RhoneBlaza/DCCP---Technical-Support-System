@@ -23,7 +23,7 @@
         description="Review and approve registration requests. ID documents are only visible to administrators." />
 
     <x-card flush class="mt-6">
-        <div class="p-4 sm:p-5 border-b border-slate-100">
+        <div class="p-4 sm:p-5 border-b border-line-soft">
             <x-list-search :route="route('admin.verifications.index')" placeholder="Search by name, email or ID number" :reset-keys="['status']">
                 <div class="w-44">
                     <x-form.select
@@ -42,7 +42,7 @@
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm">
                     <thead>
-                        <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-200 bg-slate-50/80">
+                        <tr class="text-left text-xs font-semibold uppercase tracking-wide text-ink-subtle border-b border-line bg-surface-muted/80">
                             <th class="px-4 py-2.5">Applicant</th>
                             <th class="px-4 py-2.5">ID type</th>
                             <th class="px-4 py-2.5">ID number</th>
@@ -51,16 +51,16 @@
                             <th class="px-4 py-2.5 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-slate-100">
+                    <tbody class="bg-surface divide-y divide-line-soft">
                         @foreach ($requests as $verification)
-                            <tr class="hover:bg-slate-50 transition-colors">
+                            <tr class="hover:bg-surface-muted transition-colors">
                                 <td class="px-4 py-2.5">
-                                    <div class="text-sm font-medium text-slate-800">{{ $verification->user->full_name }}</div>
-                                    <div class="text-xs text-slate-500">{{ $verification->user->email }}</div>
+                                    <div class="text-sm font-medium text-ink">{{ $verification->user->full_name }}</div>
+                                    <div class="text-xs text-ink-subtle">{{ $verification->user->email }}</div>
                                 </td>
-                                <td class="px-4 py-2.5 text-sm text-slate-600">{{ $verification->id_type_label }}</td>
-                                <td class="px-4 py-2.5 text-sm font-mono text-slate-600">{{ $verification->id_number }}</td>
-                                <td class="px-4 py-2.5 text-sm text-slate-600">{{ $verification->submitted_at->format('M j, Y H:i') }}</td>
+                                <td class="px-4 py-2.5 text-sm text-ink-muted">{{ $verification->id_type_label }}</td>
+                                <td class="px-4 py-2.5 text-sm font-mono text-ink-muted">{{ $verification->id_number }}</td>
+                                <td class="px-4 py-2.5 text-sm text-ink-muted">{{ $verification->submitted_at->format('M j, Y H:i') }}</td>
                                 <td class="px-4 py-2.5">
                                     <x-badge color="{{ $statusColors[$verification->status] ?? 'gray' }}">{{ $statusLabels[$verification->status] ?? $verification->status }}</x-badge>
                                 </td>
@@ -76,7 +76,7 @@
             </div>
 
             @if ($requests->hasPages())
-                <div class="px-5 py-4 border-t border-slate-100">
+                <div class="px-5 py-4 border-t border-line-soft">
                     {{ $requests->links() }}
                 </div>
             @endif

@@ -7,10 +7,10 @@
 @endphp
 
 @if ($paginator)
-    <p class="px-4 sm:px-5 py-2.5 text-xs text-slate-500 border-b border-slate-100">
+    <p class="px-4 sm:px-5 py-2.5 text-xs text-ink-subtle border-b border-line-soft">
         @if ($paginator->total() > 0)
-            Showing <span class="font-medium text-slate-700">{{ $paginator->firstItem() }}&ndash;{{ $paginator->lastItem() }}</span>
-            of <span class="font-medium text-slate-700">{{ $paginator->total() }}</span>
+            Showing <span class="font-medium text-ink">{{ $paginator->firstItem() }}&ndash;{{ $paginator->lastItem() }}</span>
+            of <span class="font-medium text-ink">{{ $paginator->total() }}</span>
             {{ Str::plural('ticket', $paginator->total()) }}
         @else
             No tickets to show
@@ -21,7 +21,7 @@
 <div class="overflow-x-auto">
     <table class="w-full text-sm">
         <thead>
-            <tr class="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide border-b border-slate-200 bg-slate-50/80">
+            <tr class="text-left text-xs font-semibold text-ink-subtle uppercase tracking-wide border-b border-line bg-surface-muted/80">
                 <th class="px-4 py-2.5 rounded-tl-lg">Ticket</th>
                 @if (! $requesterMode && $showRequester)
                     <th class="px-4 py-2.5 hidden md:table-cell">Requester</th>
@@ -29,9 +29,11 @@
                 @if (! $requesterMode)
                     <th class="px-4 py-2.5 hidden lg:table-cell">Category / Department</th>
                     <th class="px-4 py-2.5">Status</th>
+                    <th class="px-4 py-2.5 hidden xl:table-cell">Status updated</th>
                     <th class="px-4 py-2.5 hidden sm:table-cell">Priority</th>
                 @else
                     <th class="px-4 py-2.5">Status</th>
+                    <th class="px-4 py-2.5 hidden sm:table-cell">Status updated</th>
                 @endif
                 <th class="px-4 py-2.5 hidden sm:table-cell">Created</th>
                 @if (! $requesterMode)
@@ -39,28 +41,31 @@
                 @endif
             </tr>
         </thead>
-        <tbody class="divide-y divide-slate-100">
+        <tbody class="divide-y divide-line-soft">
             @forelse ($tickets as $ticket)
-                <tr class="hover:bg-slate-50 transition-colors">
+                <tr class="hover:bg-surface-muted transition-colors">
                     <td class="px-4 py-2.5 align-top">
-                        <a href="{{ route('tickets.show', $ticket) }}" class="font-mono text-xs text-navy-700 font-semibold hover:underline">{{ $ticket->ticket_number }}</a>
-                        <p class="text-slate-800 font-medium leading-snug mt-0.5">
+                        <a href="{{ route('tickets.show', $ticket) }}" class="font-mono text-xs text-navy-700 dark:text-navy-200 font-semibold hover:underline">{{ $ticket->ticket_number }}</a>
+                        <p class="text-ink font-medium leading-snug mt-0.5">
                             <a href="{{ route('tickets.show', $ticket) }}" class="hover:underline">{{ $ticket->display_subject }}</a>
                         </p>
                     </td>
                     @if (! $requesterMode && $showRequester)
                         <td class="px-4 py-2.5 align-top hidden md:table-cell">
-                            <p class="text-slate-700">{{ $ticket->requester?->full_name ?? '—' }}</p>
-                            <p class="text-xs text-slate-400">{{ $ticket->requester?->department?->name ?? '—' }}</p>
+                            <p class="text-ink">{{ $ticket->requester?->full_name ?? '—' }}</p>
+                            <p class="text-xs text-ink-faint">{{ $ticket->requester?->department?->name ?? '—' }}</p>
                         </td>
                     @endif
                     @if (! $requesterMode)
                         <td class="px-4 py-2.5 align-top hidden lg:table-cell">
-                            <p class="text-slate-600">{{ $ticket->category?->name ?? '—' }}</p>
-                            <p class="text-xs text-slate-400">{{ $ticket->department?->name ?? '—' }}</p>
+                            <p class="text-ink-muted">{{ $ticket->category?->name ?? '—' }}</p>
+                            <p class="text-xs text-ink-faint">{{ $ticket->department?->name ?? '—' }}</p>
                         </td>
                         <td class="px-4 py-2.5 align-top">
                             <x-status-badge :status="$ticket->status" />
+                        </td>
+                        <td class="px-4 py-2.5 align-top hidden xl:table-cell text-ink-subtle" title="{{ $ticket->status_updated_at?->format('M d, Y h:i A') }}">
+                            <x-safe-date :date="$ticket->status_updated_at ?? $ticket->updated_at" />
                         </td>
                         <td class="px-4 py-2.5 align-top hidden sm:table-cell">
                             <x-priority-badge :priority="$ticket->priority" />
@@ -69,8 +74,11 @@
                         <td class="px-4 py-2.5 align-top">
                             <x-status-badge :status="$ticket->status" />
                         </td>
+                        <td class="px-4 py-2.5 align-top hidden sm:table-cell text-ink-subtle" title="{{ $ticket->status_updated_at?->format('M d, Y h:i A') }}">
+                            <x-safe-date :date="$ticket->status_updated_at ?? $ticket->updated_at" />
+                        </td>
                     @endif
-                    <td class="px-4 py-2.5 align-top hidden sm:table-cell text-slate-500" title="{{ $ticket->created_at }}">
+                    <td class="px-4 py-2.5 align-top hidden sm:table-cell text-ink-subtle" title="{{ $ticket->created_at }}">
                         <x-safe-date :date="$ticket->created_at" />
                     </td>
                     @if (! $requesterMode)

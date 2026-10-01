@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\WorkflowException;
 use App\Http\Requests\Tickets\ReplyRequest;
 use App\Http\Requests\Tickets\StoreTicketRequest;
+use App\Http\Requests\Tickets\UpdateTicketRequest;
 use App\Models\Category;
 use App\Models\Department;
 use App\Models\Priority;
@@ -14,7 +15,9 @@ use App\Models\TicketStatus;
 use App\Models\User;
 use App\Services\AttachmentService;
 use App\Services\AuditLogger;
+use App\Services\TicketNumberGenerator;
 use App\Services\TicketWorkflowService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -66,6 +69,15 @@ class TicketsController extends Controller
         ]);
     }
 
+    public function previewNumber(): JsonResponse
+    {
+        $this->authorize('create', Ticket::class);
+
+        return response()->json([
+            'ticket_number' => app(TicketNumberGenerator::class)->preview(),
+        ]);
+    }
+
     public function store(StoreTicketRequest $request): RedirectResponse
     {
         $this->authorize('create', Ticket::class);
@@ -75,6 +87,72 @@ class TicketsController extends Controller
         return redirect()
             ->route('tickets.show', $ticket)
             ->with('status', 'Ticket '.$ticket->ticket_number.' was created successfully.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Edit
+    |--------------------------------------------------------------------------
+    */
+
+    public function edit(Ticket $ticket): View
+    {
+        $this->authorize('update', $ticket);
+
+        $categories = Category::active()->with('children')->roots()->orderBy('sort_order')->get();
+        $departments = Department::active()->orderBy('name')->get();
+
+        $prioritiesQuery = Priority::query();
+
+        if (! auth()->user()->isStaff()) {
+            $prioritiesQuery->requesterSelectable();
+        }
+
+        $priorities = $prioritiesQuery->ordered()->get();
+
+        $requesters = [];
+        if (auth()->user()->isStaff()) {
+            $requesters = User::query()
+                ->where('role', 'requester')
+                ->where('is_active', true)
+                ->orderBy('last_name')
+                ->orderBy('first_name')
+                ->get();
+        }
+
+        return view('tickets.edit', [
+            'ticket' => $ticket,
+            'categories' => $categories,
+            'departments' => $departments,
+            'priorities' => $priorities,
+            'requesters' => $requesters,
+        ]);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Update
+    |--------------------------------------------------------------------------
+    */
+
+    public function update(UpdateTicketRequest $request, Ticket $ticket): RedirectResponse
+    {
+        $this->authorize('update', $ticket);
+
+        try {
+            $this->workflow->update(
+                $ticket,
+                $request->user(),
+                $request->safe()->except('attachments'),
+                $request->file('attachments', [])
+            );
+        } catch (WorkflowException $e) {
+            return back()->withInput()->withErrors(['subject' => $e->getMessage()]);
+        }
+
+        return redirect()
+            ->route('tickets.show', $ticket)
+            ->with('status', 'Ticket '.$ticket->ticket_number.' was updated successfully.');
     }
 
     /*
@@ -181,6 +259,7 @@ class TicketsController extends Controller
             ->whereIn('role', ['support', 'admin'])
             ->where('is_active', true)
             ->orderBy('last_name')
+            ->orderBy('first_name')
             ->get();
 
         $priorities = Priority::active()->ordered()->get();
@@ -228,8 +307,7 @@ class TicketsController extends Controller
                 $ticket,
                 $request->user(),
                 $request->string('body'),
-                $request->file('attachments', []),
-                internal: true
+                $request->file('attachments', []), internal: true
             );
         } catch (WorkflowException $e) {
             return back()->withInput()->withErrors(['body' => $e->getMessage()]);
@@ -309,6 +387,10 @@ class TicketsController extends Controller
     {
         $this->authorize('manage', $ticket);
 
+        if (trim($request->string('body')) === '') {
+            return back()->withInput()->withErrors(['body' => 'A resolution summary message is required.']);
+        }
+
         try {
             $this->workflow->resolve(
                 $ticket,
@@ -339,6 +421,10 @@ class TicketsController extends Controller
     public function reopen(ReplyRequest $request, Ticket $ticket): RedirectResponse
     {
         $this->authorize('reopen', $ticket);
+
+        if (trim($request->string('body')) === '') {
+            return back()->withInput()->withErrors(['body' => 'A reason explaining why the ticket is reopened is required.']);
+        }
 
         try {
             $this->workflow->reopen(
@@ -405,8 +491,25 @@ class TicketsController extends Controller
                 ->whereHas('status', fn ($q) => $q->where('key', $request->query('status'))))
             ->when($request->filled('priority'), fn ($query) => $query
                 ->whereHas('priority', fn ($q) => $q->where('key', $request->query('priority'))))
-            ->when($request->filled('category'), fn ($query) => $query->where('category_id', $request->integer('category')))
-            ->when($request->filled('department'), fn ($query) => $query->where('department_id', $request->integer('department')));
+            ->when($request->filled('category'), fn ($query) => $query
+                ->where('category_id', $request->integer('category')))
+            ->when($request->filled('department'), fn ($query) => $query
+                ->where('department_id', $request->integer('department')))
+            ->when($request->filled('start_date') || $request->filled('end_date'), function ($query) use ($request) {
+                $start = $request->filled('start_date') ? $request->input('start_date') : null;
+                $end = $request->filled('end_date') ? $request->input('end_date') : null;
+
+                // A manually typed range can arrive reversed; order the ends so
+                // the filter still returns the intended span. ISO dates compare
+                // correctly as strings.
+                if ($start && $end && $start > $end) {
+                    [$start, $end] = [$end, $start];
+                }
+
+                $query
+                    ->when($start, fn ($query) => $query->whereDate('created_at', '>=', $start))
+                    ->when($end, fn ($query) => $query->whereDate('created_at', '<=', $end));
+            });
     }
 
     protected function filters(): array

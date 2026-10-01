@@ -9,7 +9,7 @@
             <x-slot:description>Your password must be updated before you can continue.</x-slot:description>
         </x-page-header>
 
-        <div class="bg-white rounded-lg border border-slate-200 p-5 sm:p-6 mt-6">
+        <div class="bg-surface rounded-lg border border-line p-5 sm:p-6 mt-6">
             <x-form.errors />
 
             <form method="POST" action="{{ route('profile.change-password.store') }}" class="space-y-4">
@@ -20,7 +20,7 @@
 
                 <x-form.label for="password" required>New password</x-form.label>
                 <x-form.input name="password" type="password" autocomplete="new-password" required />
-                <p class="text-xs text-slate-500 mt-1">At least 10 characters, with upper- and lower-case letters and a number.</p>
+                <p class="text-xs text-ink-subtle mt-1">At least 10 characters, with upper- and lower-case letters and a number.</p>
 
                 <x-form.label for="password_confirmation" required>Confirm new password</x-form.label>
                 <x-form.input name="password_confirmation" type="password" autocomplete="new-password" required />

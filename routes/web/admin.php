@@ -16,10 +16,10 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::patch('users/{user}/approve', [UsersController::class, 'approve'])->name('users.approve');
     Route::patch('users/{user}/reject', [UsersController::class, 'reject'])->name('users.reject');
 
-    Route::resource('departments', DepartmentsController::class)->only(['index', 'store', 'update']);
+    Route::resource('departments', DepartmentsController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::patch('departments/{department}/toggle-active', [DepartmentsController::class, 'toggleActive'])->name('departments.toggle-active');
 
-    Route::resource('categories', CategoriesController::class)->only(['index', 'store', 'update']);
+    Route::resource('categories', CategoriesController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::patch('categories/{category}/toggle-active', [CategoriesController::class, 'toggleActive'])->name('categories.toggle-active');
 
     Route::resource('priorities', PrioritiesController::class)->only(['index', 'store', 'update']);

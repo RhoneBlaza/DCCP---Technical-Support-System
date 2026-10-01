@@ -6,16 +6,19 @@
 
 @php
     $palette = [
-        'gray' => 'bg-slate-100 text-slate-700 ring-slate-200',
-        'blue' => 'bg-blue-50 text-blue-700 ring-blue-200',
-        'indigo' => 'bg-indigo-50 text-indigo-700 ring-indigo-200',
-        'teal' => 'bg-teal-50 text-teal-700 ring-teal-200',
-        'green' => 'bg-green-50 text-green-700 ring-green-200',
-        'yellow' => 'bg-yellow-50 text-yellow-800 ring-yellow-200',
-        'orange' => 'bg-orange-50 text-orange-700 ring-orange-200',
-        'red' => 'bg-red-50 text-red-700 ring-red-200',
-        'rose' => 'bg-rose-50 text-rose-700 ring-rose-200',
-        'purple' => 'bg-purple-50 text-purple-700 ring-purple-200',
+        // Kept as a real palette colour rather than a surface token: the neutral
+        // badge has to stay visually distinct from the coloured ones, which
+        // BadgeColorContrastTest asserts on.
+        'gray' => 'bg-slate-100 dark:bg-slate-500/20 text-ink ring-slate-200 dark:ring-slate-500/30',
+        'blue' => 'bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 ring-blue-200 dark:ring-blue-500/30',
+        'indigo' => 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 ring-indigo-200 dark:ring-indigo-500/30',
+        'teal' => 'bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-300 ring-teal-200 dark:ring-teal-500/30',
+        'green' => 'bg-green-50 dark:bg-green-500/10 text-green-700 dark:text-green-300 ring-green-200 dark:ring-green-500/30',
+        'yellow' => 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-800 dark:text-yellow-300 ring-yellow-200 dark:ring-yellow-500/30',
+        'orange' => 'bg-orange-50 dark:bg-orange-500/10 text-orange-700 dark:text-orange-300 ring-orange-200 dark:ring-orange-500/30',
+        'red' => 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 ring-red-200 dark:ring-red-500/30',
+        'rose' => 'bg-rose-50 dark:bg-rose-500/10 text-rose-700 dark:text-rose-300 ring-rose-200 dark:ring-rose-500/30',
+        'purple' => 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-300 ring-purple-200 dark:ring-purple-500/30',
     ];
     $classes = $palette[$color] ?? $palette['gray'];
 @endphp

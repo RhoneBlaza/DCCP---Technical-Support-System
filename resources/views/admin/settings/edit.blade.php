@@ -13,7 +13,7 @@
 
         <div class="lg:col-span-2 space-y-6">
             <x-card title="Identity" flush>
-                <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-slate-100">
+                <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-line-soft">
                     <div>
                         <x-form.label for="organization_name">Organization name</x-form.label>
                         <x-form.input name="organization_name" :value="settings('organization_name')" />
@@ -57,19 +57,19 @@
                     </div>
                 </div>
                 <div class="px-4 sm:px-5 pb-5">
-                    <p class="text-sm font-medium text-slate-700 mb-2">Allowed attachment extensions</p>
+                    <p class="text-sm font-medium text-ink mb-2">Allowed attachment extensions</p>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         @php
                             $allowed = settings('allowed_attachment_extensions', []);
                         @endphp
                         @foreach ($allowlist as $extension)
-                            <label class="inline-flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+                            <label class="inline-flex items-center gap-2 text-sm text-ink cursor-pointer">
                                 <input
                                     type="checkbox"
                                     name="allowed_attachment_extensions[]"
                                     value="{{ $extension }}"
                                     @checked(in_array($extension, $allowed, true))
-                                    class="h-4 w-4 rounded border-slate-300 text-navy-600 focus:ring-2 focus:ring-navy-500">
+                                    class="h-4 w-4 rounded border-line-strong text-navy-600 dark:text-navy-300 focus:ring-2 focus:ring-navy-500 dark:focus:ring-navy-400">
                                 .{{ $extension }}
                             </label>
                         @endforeach
@@ -82,10 +82,6 @@
 
             <x-card title="Workflow & retention" flush>
                 <div class="p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <x-form.label for="reopen_window_days">Reopen window (days)</x-form.label>
-                        <x-form.input name="reopen_window_days" type="number" :value="settings('reopen_window_days')" />
-                    </div>
                     <div>
                         <x-form.label for="auto_close_days">Auto-close resolved tickets (days)</x-form.label>
                         <x-form.input name="auto_close_days" type="number" :value="settings('auto_close_days')" />
@@ -101,7 +97,7 @@
                     <div>
                         <x-form.label for="id_image_retention_days">ID document retention (days) — 0 keeps forever</x-form.label>
                         <x-form.input name="id_image_retention_days" type="number" :value="settings('id_image_retention_days')" />
-                        <p class="text-xs text-slate-400 mt-1">After this many days the ID image file is deleted automatically. The ID number and the decision record are always kept.</p>
+                        <p class="text-xs text-ink-faint mt-1">After this many days the ID image file is deleted automatically. The ID number and the decision record are always kept.</p>
                     </div>
                 </div>
             </x-card>
@@ -123,7 +119,7 @@
                                     {{ $mailConfigured ? 'Send test email' : 'Mail not configured' }}
                                 </x-button.secondary>
                             </form>
-                            <p class="text-xs text-slate-400 mt-2">
+                            <p class="text-xs text-ink-faint mt-2">
                                 @if ($mailConfigured)
                                     A test email will be sent to you.
                                 @else

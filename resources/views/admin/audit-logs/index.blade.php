@@ -12,7 +12,7 @@
     </x-page-header>
 
     <x-card flush class="mt-6">
-        <div class="p-4 sm:p-5 border-b border-slate-100">
+        <div class="p-4 sm:p-5 border-b border-line-soft">
             <x-list-search
                 :route="route('admin.audit-logs.index')"
                 placeholder="Search by ticket number, subject or IP"
@@ -48,7 +48,7 @@
                 </div>
             </x-list-search>
 
-            <div class="mt-3 flex items-center gap-2 text-xs text-slate-500" x-data="{ lastRefresh: '' }" x-init="lastRefresh = new Date().toLocaleTimeString()">
+            <div class="mt-3 flex items-center gap-2 text-xs text-ink-subtle" x-data="{ lastRefresh: '' }" x-init="lastRefresh = new Date().toLocaleTimeString()">
                 <span class="inline-flex w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                 Live — last refreshed <span class="live-badge" x-text="lastRefresh"></span>
             </div>
@@ -60,7 +60,7 @@
             x-init="setInterval(() => refresh(), 15000)">
             <table class="min-w-full text-sm">
                 <thead>
-                    <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-200 bg-slate-50/80">
+                    <tr class="text-left text-xs font-semibold uppercase tracking-wide text-ink-subtle border-b border-line bg-surface-muted/80">
                         <th class="px-4 py-2.5">When</th>
                         <th class="px-4 py-2.5">User</th>
                         <th class="px-4 py-2.5">Action</th>
@@ -68,14 +68,14 @@
                         <th class="px-4 py-2.5">IP</th>
                     </tr>
                 </thead>
-                <tbody id="activity-rows" class="bg-white divide-y divide-slate-100">
+                <tbody id="activity-rows" class="bg-surface divide-y divide-line-soft">
                     @include('admin.audit-logs.partials.rows', ['logs' => $logs])
                 </tbody>
             </table>
         </div>
     </x-card>
 
-    <p class="mt-4 text-xs text-slate-400">
+    <p class="mt-4 text-xs text-ink-faint">
         To view a user's or a ticket's full history, filter by <strong>User</strong> or <strong>Ticket #</strong> above.
         Audit logs are append-only and can never be edited or deleted from the application.
     </p>

@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class SettingsService
 {
     protected const CACHE_KEY = 'tsts.settings';
+
+    protected const BRANDING_CACHE_KEY = 'tsts.branding';
 
     /**
      * Get a setting value, cast to its stored type.
@@ -72,9 +75,17 @@ class SettingsService
 
     /**
      * All settings as a keyed array of [value, type], cached.
+     *
+     * Guarded by a schema check because the branding is read while rendering
+     * every view, including during `migrate` and on a brand new checkout where
+     * the table does not exist yet. `get()` still falls back to config defaults.
      */
     public function all(): array
     {
+        if (! Schema::hasTable('settings')) {
+            return [];
+        }
+
         return Cache::rememberForever(self::CACHE_KEY, function () {
             return Setting::all(['key', 'value', 'type'])
                 ->keyBy('key')
@@ -86,6 +97,21 @@ class SettingsService
     public function flush(): void
     {
         Cache::forget(self::CACHE_KEY);
+        Cache::forget(self::BRANDING_CACHE_KEY);
+    }
+
+    /**
+     * The branding strings every layout needs, resolved once per cache lifetime.
+     *
+     * @return array{systemName: string, systemShortName: string, organizationName: string}
+     */
+    public function branding(): array
+    {
+        return Cache::rememberForever(self::BRANDING_CACHE_KEY, fn (): array => [
+            'systemName' => (string) $this->get('system_name', config('app.name')),
+            'systemShortName' => (string) $this->get('system_short_name', config('app.name')),
+            'organizationName' => (string) $this->get('organization_name', ''),
+        ]);
     }
 
     protected function cast(mixed $value, string $type): mixed

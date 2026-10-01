@@ -6,6 +6,8 @@ use App\Enums\MessageType;
 use App\Models\Ticket;
 use App\Models\TicketAttachment;
 use App\Models\TicketMessage;
+use App\Models\TicketStatus;
+use App\Models\User;
 
 class IdorTest extends SecurityTestCase
 {
@@ -42,5 +44,39 @@ class IdorTest extends SecurityTestCase
         $this->actingAs($this->requester)
             ->get(route('tickets.download', [$ticket, $attachment]))
             ->assertForbidden();
+    }
+
+    public function test_a_requester_cannot_edit_another_users_ticket(): void
+    {
+        $foreign = Ticket::factory()->create([
+            'requester_id' => User::factory()->requester()->create()->id,
+        ]);
+
+        $this->actingAs($this->requester)
+            ->get(route('tickets.edit', $foreign))
+            ->assertNotFound();
+
+        $this->actingAs($this->requester)
+            ->put(route('tickets.update', $foreign), [
+                'department_id' => $foreign->department_id,
+                'category_id' => $foreign->category_id,
+                'subject' => 'Hijacked',
+                'description' => 'Trying to overwrite somebody else\'s ticket.',
+            ])
+            ->assertNotFound();
+    }
+
+    public function test_a_requester_cannot_reopen_another_users_ticket(): void
+    {
+        $foreign = Ticket::factory()->create([
+            'requester_id' => User::factory()->requester()->create()->id,
+            'status_id' => TicketStatus::where('key', 'resolved')->value('id'),
+        ]);
+
+        $this->actingAs($this->requester)
+            ->put(route('tickets.reopen', $foreign), ['body' => 'Not mine to reopen.'])
+            ->assertForbidden();
+
+        $this->assertSame('resolved', $foreign->fresh()->status->key);
     }
 }

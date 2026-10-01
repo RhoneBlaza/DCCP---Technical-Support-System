@@ -21,7 +21,7 @@ class PriorityManagementTest extends TestCase
 
         $this->seed();
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
     }
 
     public function test_a_system_priority_can_be_updated_with_its_existing_key(): void

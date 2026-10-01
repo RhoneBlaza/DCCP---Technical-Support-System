@@ -42,7 +42,7 @@
 
         <div class="lg:col-span-2 space-y-6">
             <x-card flush>
-                <div class="p-4 sm:p-5 border-b border-slate-100">
+                <div class="p-4 sm:p-5 border-b border-line-soft">
                     <x-list-search :route="route('admin.categories.index')" placeholder="Search categories" />
                 </div>
 
@@ -52,20 +52,20 @@
                     <div class="overflow-x-auto">
                         <table class="min-w-full text-sm">
                             <thead>
-                                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-200 bg-slate-50/80">
+                                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-ink-subtle border-b border-line bg-surface-muted/80">
                                     <th class="px-4 py-2.5">Name</th>
                                     <th class="px-4 py-2.5">Type</th>
                                     <th class="px-4 py-2.5">Status</th>
                                     <th class="px-4 py-2.5 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-slate-100">
+                            <tbody class="bg-surface divide-y divide-line-soft">
                                 @foreach ($roots as $category)
-                                    <tr class="hover:bg-slate-50 transition-colors">
+                                    <tr class="hover:bg-surface-muted transition-colors">
                                         <td class="px-4 py-2.5">
-                                            <div class="text-sm font-semibold text-slate-800">{{ $category->name }}</div>
+                                            <div class="text-sm font-semibold text-ink">{{ $category->name }}</div>
                                             @if ($category->description)
-                                                <div class="text-xs text-slate-500 max-w-xs truncate">{{ $category->description }}</div>
+                                                <div class="text-xs text-ink-subtle max-w-xs truncate">{{ $category->description }}</div>
                                             @endif
                                         </td>
                                         <td class="px-4 py-2.5">
@@ -84,21 +84,28 @@
                                                 <form method="POST" action="{{ route('admin.categories.toggle-active', $category) }}">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 ring-1 ring-slate-300 hover:bg-slate-50">
+                                                    <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted ring-1 ring-line-strong hover:bg-surface-muted">
                                                         {{ $category->is_active ? 'Deactivate' : 'Activate' }}
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 ring-1 ring-red-300 dark:ring-red-500/40 hover:bg-red-50 dark:hover:bg-red-500/10">
+                                                        Delete
                                                     </button>
                                                 </form>
                                             </div>
                                         </td>
                                     </tr>
                                     @foreach ($category->children as $child)
-                                        <tr class="hover:bg-slate-50 transition-colors">
+                                        <tr class="hover:bg-surface-muted transition-colors">
                                             <td class="px-4 py-2.5 pl-8">
                                                 <div class="flex items-center gap-2">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"/></svg>
-                                                    <span class="text-sm text-slate-800">{{ $child->name }}</span>
+                                                    <span class="text-sm text-ink">{{ $child->name }}</span>
                                                     @if ($child->description)
-                                                        <span class="text-xs text-slate-400 truncate max-w-[16rem]">{{ $child->description }}</span>
+                                                        <span class="text-xs text-ink-faint truncate max-w-[16rem]">{{ $child->description }}</span>
                                                     @endif
                                                 </div>
                                             </td>
@@ -118,8 +125,15 @@
                                                     <form method="POST" action="{{ route('admin.categories.toggle-active', $child) }}">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 ring-1 ring-slate-300 hover:bg-slate-50">
+                                                        <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted ring-1 ring-line-strong hover:bg-surface-muted">
                                                             {{ $child->is_active ? 'Deactivate' : 'Activate' }}
+                                                        </button>
+                                                    </form>
+                                                    <form method="POST" action="{{ route('admin.categories.destroy', $child) }}" onsubmit="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 ring-1 ring-red-300 dark:ring-red-500/40 hover:bg-red-50 dark:hover:bg-red-500/10">
+                                                            Delete
                                                         </button>
                                                     </form>
                                                 </div>
@@ -132,7 +146,7 @@
                     </div>
 
                     @if ($roots->hasPages())
-                        <div class="px-5 py-4 border-t border-slate-100">
+                        <div class="px-5 py-4 border-t border-line-soft">
                             {{ $roots->links() }}
                         </div>
                     @endif
@@ -171,7 +185,7 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-end gap-2 pt-1">
-                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" @click="$store.modals.close('edit-category-{{ $category->id }}')">Cancel</button>
+                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-ink-muted hover:bg-surface-sunken" @click="$store.modals.close('edit-category-{{ $category->id }}')">Cancel</button>
                     <x-button.primary type="submit">Save changes</x-button.primary>
                 </div>
             </form>
@@ -204,7 +218,7 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-end gap-2 pt-1">
-                        <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" @click="$store.modals.close('edit-category-{{ $child->id }}')">Cancel</button>
+                        <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-ink-muted hover:bg-surface-sunken" @click="$store.modals.close('edit-category-{{ $child->id }}')">Cancel</button>
                         <x-button.primary type="submit">Save changes</x-button.primary>
                     </div>
                 </form>

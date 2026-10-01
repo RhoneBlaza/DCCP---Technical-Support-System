@@ -45,25 +45,24 @@
     }
 @endphp
 
-{{-- The header grows with the organization name instead of clipping it, and
-     break-words keeps a long unbroken name from spilling past the sidebar. --}}
+{{-- The header shows the admin-editable system name and wraps to a second line
+     instead of clipping so a long organization name stays readable. --}}
 <div class="flex items-center gap-3 px-5 py-2 border-b border-white/10 shrink-0">
     <div class="flex items-center justify-center w-9 h-9 rounded-lg bg-white ring-1 ring-white/20 shrink-0 overflow-hidden">
         <img
             src="{{ asset('images/dccp-logo.png') }}"
-            alt="{{ settings('organization_name', 'Data Center College of the Philippines - Bangued') }} logo"
+            alt="{{ $organizationName }} logo"
             class="w-8 h-8 object-contain">
     </div>
     <div class="min-w-0">
-        <p class="text-sm font-semibold leading-tight">{{ settings('system_short_name', 'TSTS') }}</p>
-        @php
-            $organizationName = settings('organization_name', '');
-        @endphp
-        <p class="text-[11px] text-slate-300 leading-tight break-words">{{ $organizationName }}</p>
+        <p class="text-sm font-semibold leading-tight break-words">{{ $systemName }}</p>
+        @if ($organizationName)
+            <p class="text-[11px] text-slate-300 leading-tight break-words">{{ $organizationName }}</p>
+        @endif
     </div>
 </div>
 
-<nav class="flex-1 overflow-y-auto py-4 px-3 space-y-5" aria-label="Main navigation">
+<nav class="flex-1 overflow-y-auto py-4 px-3 space-y-5 min-h-0" aria-label="Main navigation">
     @foreach ($sections as $label => $items)
         <div>
             <p class="px-3 mb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-400">{{ $label }}</p>
@@ -75,6 +74,8 @@
                         @endphp
                         <a
                             href="{{ route($name) }}"
+                            title="{{ $itemLabel }}"
+                            aria-label="{{ $itemLabel }}"
                             class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors {{ $isActive ? 'bg-white/10 text-white ring-1 ring-white/10' : 'text-navy-100 hover:bg-white/5 hover:text-white' }}"
                             @if ($isActive) aria-current="page" @endif>
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0 {{ $isActive ? 'text-navy-200' : 'opacity-70 group-hover:opacity-100' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $icon }}"/></svg>
@@ -87,7 +88,7 @@
     @endforeach
 </nav>
 
-<a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-3 border-t border-white/10 hover:bg-white/5 transition-colors">
+<a href="{{ route('profile.show') }}" class="flex items-center gap-3 px-4 py-3 border-t border-white/10 hover:bg-white/5 transition-colors shrink-0">
     <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-navy-500/30 ring-1 ring-white/20 text-white text-xs font-semibold shrink-0">{{ $user->initials }}</span>
     <span class="min-w-0">
         <span class="block text-sm font-medium text-white truncate">{{ $user->full_name }}</span>

@@ -82,7 +82,7 @@ Each item below was checked in source and/or covered by the existing suite.
 - **Error handling** — `APP_DEBUG=false` yields friendly 500s with no stack trace.
 - **Audit integrity** — append-only, admin-only, no update/delete route; passwords/remember tokens stripped from old/new values; failed logins store no password.
 - **Dependencies** — `composer audit` and `npm audit` clean.
-- **Demo data** — `DemoSeeder` (password `ChangeMe123!`) is gated to `local`/`testing`; cannot run in production.
+- **Demo data** — `DemoSeeder` (password `Admin123`) is gated to `local`/`testing`; cannot run in production.
 
 ---
 

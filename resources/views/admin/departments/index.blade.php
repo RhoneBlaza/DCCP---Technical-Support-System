@@ -36,7 +36,7 @@
 
         <div class="lg:col-span-2 space-y-6">
             <x-card flush>
-                <div class="p-4 sm:p-5 border-b border-slate-100">
+                <div class="p-4 sm:p-5 border-b border-line-soft">
                     <x-list-search :route="route('admin.departments.index')" placeholder="Search by name or code" />
                 </div>
 
@@ -46,7 +46,7 @@
                     <div class="overflow-x-auto">
                         <table class="min-w-full text-sm">
                             <thead>
-                                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-200 bg-slate-50/80">
+                                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-ink-subtle border-b border-line bg-surface-muted/80">
                                     <th class="px-4 py-2.5">Name</th>
                                     <th class="px-4 py-2.5">Code</th>
                                     <th class="px-4 py-2.5 hidden md:table-cell">Users</th>
@@ -54,17 +54,17 @@
                                     <th class="px-4 py-2.5 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-slate-100">
+                            <tbody class="bg-surface divide-y divide-line-soft">
                                 @foreach ($departments as $department)
-                                    <tr class="hover:bg-slate-50 transition-colors">
+                                    <tr class="hover:bg-surface-muted transition-colors">
                                         <td class="px-4 py-2.5">
-                                            <div class="text-sm font-medium text-slate-800">{{ $department->name }}</div>
+                                            <div class="text-sm font-medium text-ink">{{ $department->name }}</div>
                                             @if ($department->description)
-                                                <div class="text-xs text-slate-500 max-w-xs truncate">{{ $department->description }}</div>
+                                                <div class="text-xs text-ink-subtle max-w-xs truncate">{{ $department->description }}</div>
                                             @endif
                                         </td>
-                                        <td class="px-4 py-2.5 text-sm font-mono text-slate-600">{{ $department->code }}</td>
-                                        <td class="px-4 py-2.5 text-sm text-slate-600 hidden md:table-cell">{{ $department->users_count }}</td>
+                                        <td class="px-4 py-2.5 text-sm font-mono text-ink-muted">{{ $department->code }}</td>
+                                        <td class="px-4 py-2.5 text-sm text-ink-muted hidden md:table-cell">{{ $department->users_count }}</td>
                                         <td class="px-4 py-2.5">
                                             @if ($department->is_active)
                                                 <x-badge color="green">Active</x-badge>
@@ -78,8 +78,15 @@
                                                 <form method="POST" action="{{ route('admin.departments.toggle-active', $department) }}">
                                                     @csrf
                                                     @method('PATCH')
-                                                    <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 ring-1 ring-slate-300 hover:bg-slate-50">
+                                                    <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted ring-1 ring-line-strong hover:bg-surface-muted">
                                                         {{ $department->is_active ? 'Deactivate' : 'Activate' }}
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ route('admin.departments.destroy', $department) }}" onsubmit="return confirm('Are you sure you want to delete this department? This action cannot be undone.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 ring-1 ring-red-300 dark:ring-red-500/40 hover:bg-red-50 dark:hover:bg-red-500/10">
+                                                        Delete
                                                     </button>
                                                 </form>
                                             </div>
@@ -91,7 +98,7 @@
                     </div>
 
                     @if ($departments->hasPages())
-                        <div class="px-5 py-4 border-t border-slate-100">
+                        <div class="px-5 py-4 border-t border-line-soft">
                             {{ $departments->links() }}
                         </div>
                     @endif
@@ -124,7 +131,7 @@
                     <x-form.checkbox name="is_active" label="Active" :checked="$department->is_active" />
                 </div>
                 <div class="flex items-center justify-end gap-2 pt-1">
-                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" @click="$store.modals.close('edit-department-{{ $department->id }}')">Cancel</button>
+                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-ink-muted hover:bg-surface-sunken" @click="$store.modals.close('edit-department-{{ $department->id }}')">Cancel</button>
                     <x-button.primary type="submit">Save changes</x-button.primary>
                 </div>
             </form>

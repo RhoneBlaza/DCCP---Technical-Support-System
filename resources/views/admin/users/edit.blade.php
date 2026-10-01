@@ -23,7 +23,7 @@
     <x-form.errors />
 
     <div class="max-w-3xl mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        <div class="lg:col-span-2 bg-white rounded-lg border border-slate-200 p-5 sm:p-6">
+        <div class="lg:col-span-2 bg-surface rounded-lg border border-line p-5 sm:p-6">
             <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-5">
                 @csrf
                 @method('PUT')
@@ -76,7 +76,7 @@
 
                 <div class="flex items-center gap-3 pt-2">
                     <x-button.primary type="submit">Save changes</x-button.primary>
-                    <a href="{{ route('admin.users.index') }}" class="text-sm text-slate-500 hover:underline">Cancel</a>
+                    <a href="{{ route('admin.users.index') }}" class="text-sm text-ink-subtle hover:underline">Cancel</a>
                 </div>
             </form>
         </div>
@@ -85,16 +85,16 @@
             <x-card title="Account">
                 <dl class="space-y-3 text-sm">
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Role</dt>
-                        <dd class="text-slate-800">{{ $user->role->label() }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Role</dt>
+                        <dd class="text-ink">{{ $user->role->label() }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Account status</dt>
-                        <dd class="text-slate-800">{{ $user->account_status->label() }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Account status</dt>
+                        <dd class="text-ink">{{ $user->account_status->label() }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Last login</dt>
-                        <dd class="text-slate-800">{{ $user->last_login_at?->format('M j, Y H:i') ?? 'Never' }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Last login</dt>
+                        <dd class="text-ink">{{ $user->last_login_at?->format('M j, Y H:i') ?? 'Never' }}</dd>
                     </div>
                 </dl>
             </x-card>

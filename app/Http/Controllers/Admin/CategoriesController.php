@@ -91,6 +91,27 @@ class CategoriesController extends Controller
         return back()->with('status', 'Category updated.');
     }
 
+    public function destroy(Category $category): RedirectResponse
+    {
+        $this->authorize('delete', $category);
+
+        // Check if category has children
+        if ($category->children()->exists()) {
+            return back()->withErrors(['error' => 'Cannot delete category that has subcategories.']);
+        }
+
+        // Check if category has tickets
+        if ($category->tickets()->exists()) {
+            return back()->withErrors(['error' => 'Cannot delete category that has tickets associated.']);
+        }
+
+        $this->audit->log('category_deleted', $category, 'Category deleted: '.$category->name);
+
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')->with('status', 'Category deleted.');
+    }
+
     /**
      * Categories have at most two levels: a parent may never itself have a parent.
      */

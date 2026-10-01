@@ -20,7 +20,7 @@
         @if ($notifications->isEmpty())
             <x-empty-state title="No notifications" description="Notifications about your tickets will appear here." />
         @else
-            <ul class="divide-y divide-slate-100">
+            <ul class="divide-y divide-line-soft">
                 @foreach ($notifications as $notification)
                     <li class="flex items-start gap-3 px-4 sm:px-5 py-3.5 {{ $notification->read_at ? '' : 'bg-navy-50/40' }}">
                         <div class="min-w-0 flex-1">
@@ -28,10 +28,10 @@
                                 <span class="inline-block w-2 h-2 rounded-full bg-navy-500 mt-1.5 mr-2 align-middle"></span>
                             @endif
                             @if (! empty($notification->data['title']))
-                                <p class="text-sm font-semibold text-slate-800">{{ $notification->data['title'] }}</p>
+                                <p class="text-sm font-semibold text-ink">{{ $notification->data['title'] }}</p>
                             @endif
-                            <p class="text-sm text-slate-700">{{ $notification->data['text'] ?? 'Notification' }}</p>
-                            <p class="text-xs text-slate-400 mt-0.5" title="{{ $notification->created_at->format('M j, Y H:i') }}">
+                            <p class="text-sm text-ink">{{ $notification->data['text'] ?? 'Notification' }}</p>
+                            <p class="text-xs text-ink-faint mt-0.5" title="{{ $notification->created_at->format('M j, Y H:i') }}">
                                 {{ $notification->created_at->diffForHumans() }}
                             </p>
                         </div>
@@ -53,7 +53,7 @@
             </ul>
 
             @if ($notifications->hasPages())
-                <div class="px-5 py-4 border-t border-slate-100">
+                <div class="px-5 py-4 border-t border-line-soft">
                     {{ $notifications->links() }}
                 </div>
             @endif

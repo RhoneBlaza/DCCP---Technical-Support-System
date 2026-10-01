@@ -1,12 +1,12 @@
 @props(['title' => null, 'description' => null, 'flush' => false])
 
-<div {{ $attributes->merge(['class' => 'bg-white rounded-lg border border-slate-200']) }}>
+<div {{ $attributes->merge(['class' => 'bg-surface rounded-lg border border-line']) }}>
     @if ($title)
-        <div class="flex items-start justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-slate-100">
+        <div class="flex items-start justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-line-soft">
             <div class="min-w-0">
-                <h2 class="text-sm font-semibold text-slate-800">{{ $title }}</h2>
+                <h2 class="text-sm font-semibold text-ink">{{ $title }}</h2>
                 @if ($description)
-                    <p class="text-xs text-slate-500 mt-0.5">{{ $description }}</p>
+                    <p class="text-xs text-ink-subtle mt-0.5">{{ $description }}</p>
                 @endif
             </div>
             @isset($actions)

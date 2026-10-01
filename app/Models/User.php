@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\AccountStatusCast;
 use App\Enums\AccountStatus;
+use App\Enums\ThemePreference;
 use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,6 +38,7 @@ class User extends Authenticatable
         'profile_photo_path',
         'is_active',
         'account_status',
+        'theme',
         'must_change_password',
         'last_login_at',
         'password',
@@ -53,6 +55,7 @@ class User extends Authenticatable
         return [
             'role' => UserRole::class,
             'account_status' => AccountStatusCast::class,
+            'theme' => ThemePreference::class,
             'is_active' => 'boolean',
             'must_change_password' => 'boolean',
             'last_login_at' => 'datetime',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Profile;
 
+use App\Enums\ThemePreference;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -22,6 +23,7 @@ class UpdateProfileRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user()->id)],
             'contact_number' => ['nullable', 'string', 'max:50'],
             'position' => ['nullable', 'string', 'max:255'],
+            'theme' => ['nullable', Rule::in(ThemePreference::values())],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ];
     }

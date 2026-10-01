@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ThemePreference;
 use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Services\AuditLogger;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -46,5 +50,22 @@ class ProfileController extends Controller
         $this->audit->log('profile_updated', $user, 'User updated their own profile', $old, $data);
 
         return back()->with('status', 'Profile updated successfully.');
+    }
+
+    /**
+     * Persist the theme picked from the top bar toggle.
+     *
+     * This lives behind the auth middleware, so a guest toggling the theme only
+     * ever writes to localStorage and can never reach the database.
+     */
+    public function updateTheme(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'theme' => ['required', Rule::in(ThemePreference::values())],
+        ]);
+
+        $request->user()->update(['theme' => $validated['theme']]);
+
+        return response()->json(['theme' => $validated['theme']]);
     }
 }

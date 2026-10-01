@@ -38,12 +38,12 @@
             <x-card title="ID document" description="Visible to administrators only. Every view is recorded in the audit log.">
                 <div class="flex flex-wrap items-center gap-3">
                     <div>
-                        <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">ID type</span>
-                        <p class="text-sm text-slate-800 font-medium">{{ $request->id_type_label }}</p>
+                        <span class="text-xs font-semibold uppercase tracking-wide text-ink-faint">ID type</span>
+                        <p class="text-sm text-ink font-medium">{{ $request->id_type_label }}</p>
                     </div>
                     <div>
-                        <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">ID number</span>
-                        <p class="text-sm font-mono text-slate-800 font-medium">{{ $request->id_number }}</p>
+                        <span class="text-xs font-semibold uppercase tracking-wide text-ink-faint">ID number</span>
+                        <p class="text-sm font-mono text-ink font-medium">{{ $request->id_number }}</p>
                     </div>
                     <div class="ml-auto">
                         <x-button.secondary :href="route('admin.verifications.image', $request)" target="_blank">
@@ -54,14 +54,14 @@
             </x-card>
 
             <x-card title="Submission history" description="The full verification history is kept, resubmissions create new records." flush>
-                <div class="divide-y divide-slate-100">
+                <div class="divide-y divide-line-soft">
                     @foreach ($history as $entry)
                         <div class="px-4 sm:px-5 py-3.5 flex flex-wrap items-center gap-2">
-                            <span class="text-xs font-mono text-slate-400">{{ $entry->submitted_at->format('M j, Y H:i') }}</span>
+                            <span class="text-xs font-mono text-ink-faint">{{ $entry->submitted_at->format('M j, Y H:i') }}</span>
                             <x-badge color="{{ $statusColors[$entry->status] ?? 'gray' }}">{{ $statusLabels[$entry->status] ?? $entry->status }}</x-badge>
-                            <span class="text-xs text-slate-500">{{ $entry->id_type_label }} · {{ $entry->id_number }}</span>
+                            <span class="text-xs text-ink-subtle">{{ $entry->id_type_label }} · {{ $entry->id_number }}</span>
                             @if ($entry->decision_note)
-                                <span class="w-full text-xs text-slate-600 mt-1">{{ $entry->decision_note }}</span>
+                                <span class="w-full text-xs text-ink-muted mt-1">{{ $entry->decision_note }}</span>
                             @endif
                         </div>
                     @endforeach
@@ -73,28 +73,28 @@
             <x-card title="Applicant">
                 <dl class="space-y-3 text-sm">
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Name</dt>
-                        <dd class="text-slate-800 font-medium">{{ $request->user->full_name }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Name</dt>
+                        <dd class="text-ink font-medium">{{ $request->user->full_name }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Email</dt>
-                        <dd class="text-slate-800">{{ $request->user->email }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Email</dt>
+                        <dd class="text-ink">{{ $request->user->email }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Department</dt>
-                        <dd class="text-slate-800">{{ $request->user->department?->name ?? '—' }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Department</dt>
+                        <dd class="text-ink">{{ $request->user->department?->name ?? '—' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Position</dt>
-                        <dd class="text-slate-800">{{ $request->user->position ?? '—' }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Position</dt>
+                        <dd class="text-ink">{{ $request->user->position ?? '—' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Contact</dt>
-                        <dd class="text-slate-800">{{ $request->user->contact_number ?? '—' }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Contact</dt>
+                        <dd class="text-ink">{{ $request->user->contact_number ?? '—' }}</dd>
                     </div>
                     <div>
-                        <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Account</dt>
-                        <dd class="text-slate-800">{{ $request->user->account_status->label() }}</dd>
+                        <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Account</dt>
+                        <dd class="text-ink">{{ $request->user->account_status->label() }}</dd>
                     </div>
                 </dl>
             </x-card>
@@ -103,15 +103,15 @@
                 <x-card title="Decision" description="Rejecting or requesting resubmission requires a reason.">
                     <div x-data="{ tab: 'approve' }" class="space-y-4">
                         <div class="grid grid-cols-3 gap-2">
-                            <button type="button" @click="tab = 'approve'" :class="tab === 'approve' ? 'bg-navy-700 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-2 py-2 rounded-lg text-xs font-semibold transition-colors">Approve</button>
-                            <button type="button" @click="tab = 'reject'" :class="tab === 'reject' ? 'bg-red-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-2 py-2 rounded-lg text-xs font-semibold transition-colors">Reject</button>
-                            <button type="button" @click="tab = 'resubmit'" :class="tab === 'resubmit' ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-2 py-2 rounded-lg text-xs font-semibold transition-colors">Resubmit</button>
+                            <button type="button" @click="tab = 'approve'" :class="tab === 'approve' ? 'bg-navy-700 text-white' : 'bg-surface-sunken text-ink-muted hover:bg-surface-active'" class="px-2 py-2 rounded-lg text-xs font-semibold transition-colors">Approve</button>
+                            <button type="button" @click="tab = 'reject'" :class="tab === 'reject' ? 'bg-red-600 text-white' : 'bg-surface-sunken text-ink-muted hover:bg-surface-active'" class="px-2 py-2 rounded-lg text-xs font-semibold transition-colors">Reject</button>
+                            <button type="button" @click="tab = 'resubmit'" :class="tab === 'resubmit' ? 'bg-orange-500 text-white' : 'bg-surface-sunken text-ink-muted hover:bg-surface-active'" class="px-2 py-2 rounded-lg text-xs font-semibold transition-colors">Resubmit</button>
                         </div>
 
                         <form method="POST" action="{{ route('admin.verifications.approve', $request) }}" x-show="tab === 'approve'">
                             @csrf
                             @method('PATCH')
-                            <div class="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs text-slate-600 mb-3">
+                            <div class="rounded-lg bg-surface-muted border border-line p-3 text-xs text-ink-muted mb-3">
                                 Approving activates the account immediately. The requester will be notified in-app and by email if mail is configured.
                             </div>
                             <x-button.primary type="submit" class="w-full justify-center">Approve registration</x-button.primary>
@@ -138,21 +138,21 @@
                 <x-card title="Decision">
                     <dl class="space-y-3 text-sm">
                         <div>
-                            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Status</dt>
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Status</dt>
                             <dd><x-badge color="{{ $statusColors[$request->status] ?? 'gray' }}">{{ $statusLabels[$request->status] ?? $request->status }}</x-badge></dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Reviewed by</dt>
-                            <dd class="text-slate-800">{{ $request->reviewer?->full_name ?? '—' }}</dd>
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Reviewed by</dt>
+                            <dd class="text-ink">{{ $request->reviewer?->full_name ?? '—' }}</dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Reviewed at</dt>
-                            <dd class="text-slate-800">{{ $request->reviewed_at?->format('M j, Y H:i') ?? '—' }}</dd>
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Reviewed at</dt>
+                            <dd class="text-ink">{{ $request->reviewed_at?->format('M j, Y H:i') ?? '—' }}</dd>
                         </div>
                         @if ($request->decision_note)
                             <div>
-                                <dt class="text-xs font-semibold uppercase tracking-wide text-slate-400">Note</dt>
-                                <dd class="text-slate-700">{{ $request->decision_note }}</dd>
+                                <dt class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Note</dt>
+                                <dd class="text-ink">{{ $request->decision_note }}</dd>
                             </div>
                         @endif
                     </dl>

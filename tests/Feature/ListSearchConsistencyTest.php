@@ -25,7 +25,7 @@ class ListSearchConsistencyTest extends TestCase
 
         $this->seed();
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
     }
 
     /**

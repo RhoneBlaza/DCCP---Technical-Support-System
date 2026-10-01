@@ -23,7 +23,7 @@ class TicketStatusActivationTest extends TestCase
 
         $this->seed();
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
     }
 
     public function test_an_unused_custom_status_can_be_deactivated_and_reactivated(): void

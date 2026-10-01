@@ -27,7 +27,6 @@ class UpdateSettingsRequest extends FormRequest
             'allowed_attachment_extensions' => ['required', 'array', 'min:1'],
             'allowed_attachment_extensions.*' => ['required', 'string', 'max:10'],
             'max_attachments_per_message' => ['required', 'integer', 'min:1', 'max:20'],
-            'reopen_window_days' => ['required', 'integer', 'min:0', 'max:365'],
             'auto_close_days' => ['required', 'integer', 'min:0', 'max:365'],
             'audit_retention_days' => ['required', 'integer', 'min:0', 'max:3650'],
             'notification_retention_days' => ['required', 'integer', 'min:0', 'max:3650'],

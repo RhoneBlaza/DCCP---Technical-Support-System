@@ -11,7 +11,7 @@
     <x-form.errors />
 
     <div class="max-w-3xl mt-6">
-        <div class="bg-white rounded-lg border border-slate-200 p-5 sm:p-6">
+        <div class="bg-surface rounded-lg border border-line p-5 sm:p-6">
             <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-5">
                 @csrf
 
@@ -59,7 +59,7 @@
 
                 <div class="flex items-center gap-3 pt-2">
                     <x-button.primary type="submit">Create user</x-button.primary>
-                    <a href="{{ route('admin.users.index') }}" class="text-sm text-slate-500 hover:underline">Cancel</a>
+                    <a href="{{ route('admin.users.index') }}" class="text-sm text-ink-subtle hover:underline">Cancel</a>
                 </div>
             </form>
         </div>

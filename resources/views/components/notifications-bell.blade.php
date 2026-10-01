@@ -1,7 +1,7 @@
 <div class="relative" x-data="notificationBell()" @click.outside="open = false">
     <button
         type="button"
-        class="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100"
+        class="relative p-2 rounded-lg text-ink-muted hover:bg-surface-sunken"
         @click="toggle"
         aria-label="Notifications"
         aria-haspopup="true">
@@ -17,27 +17,27 @@
         x-cloak
         x-show="open"
         x-transition
-        class="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-white ring-1 ring-slate-200 shadow-lg z-40 overflow-hidden">
-        <div class="flex items-center justify-between px-4 py-2.5 border-b border-slate-100">
-            <p class="text-sm font-semibold text-slate-800">Notifications</p>
+        class="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-surface ring-1 ring-line shadow-lg z-40 overflow-hidden">
+        <div class="flex items-center justify-between px-4 py-2.5 border-b border-line-soft">
+            <p class="text-sm font-semibold text-ink">Notifications</p>
             <template x-if="items.length > 0">
-                <button type="button" class="text-xs text-navy-700 hover:underline" @click="markAllRead">Mark all read</button>
+                <button type="button" class="text-xs text-navy-700 dark:text-navy-200 hover:underline" @click="markAllRead">Mark all read</button>
             </template>
         </div>
 
-        <div class="max-h-80 overflow-y-auto divide-y divide-slate-100" @click.outside="open = false">
+        <div class="max-h-80 overflow-y-auto divide-y divide-line-soft" @click.outside="open = false">
             <template x-if="items.length === 0">
-                <div class="px-4 py-8 text-center text-sm text-slate-500">You're all caught up.</div>
+                <div class="px-4 py-8 text-center text-sm text-ink-subtle">You're all caught up.</div>
             </template>
             <template x-for="item in items" :key="item.id">
-                <a :href="item.url || '#'" class="block px-4 py-3 hover:bg-slate-50" :class="item.read_at ? '' : 'bg-navy-50/40'">
-                    <p class="text-sm text-slate-700" x-text="item.text"></p>
-                    <p class="text-xs text-slate-500 mt-0.5" x-text="item.relative"></p>
+                <a :href="item.url || '#'" class="block px-4 py-3 hover:bg-surface-muted" :class="item.read_at ? '' : 'bg-navy-50/40'">
+                    <p class="text-sm text-ink" x-text="item.text"></p>
+                    <p class="text-xs text-ink-subtle mt-0.5" x-text="item.relative"></p>
                 </a>
             </template>
         </div>
 
-        <a href="{{ route('notifications.index') }}" class="block border-t border-slate-100 px-4 py-2.5 text-center text-sm text-navy-700 font-medium hover:bg-slate-50">
+        <a href="{{ route('notifications.index') }}" class="block border-t border-line-soft px-4 py-2.5 text-center text-sm text-navy-700 dark:text-navy-200 font-medium hover:bg-surface-muted">
             View all notifications
         </a>
     </div>

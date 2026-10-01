@@ -30,9 +30,9 @@ class TicketAssignmentInvariantTest extends TestCase
 
         $this->workflow = app(TicketWorkflowService::class);
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
-        $this->support = User::where('email', 'support@dccp-bangued.test')->firstOrFail();
-        $this->requester = User::where('email', 'juan@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
+        $this->support = User::where('email', 'support@sample.com')->firstOrFail();
+        $this->requester = User::where('email', 'requester@sample.com')->firstOrFail();
     }
 
     public function test_in_progress_status_requires_an_assignee(): void

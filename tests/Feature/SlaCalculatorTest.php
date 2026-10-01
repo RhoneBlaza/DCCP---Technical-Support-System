@@ -25,7 +25,7 @@ class SlaCalculatorTest extends TestCase
         $this->seed();
 
         $this->sla = app(SlaCalculator::class);
-        $this->requester = User::where('email', 'juan@dccp-bangued.test')->firstOrFail();
+        $this->requester = User::where('email', 'requester@sample.com')->firstOrFail();
     }
 
     public function test_a_resolved_ticket_never_reports_overdue(): void
@@ -135,7 +135,7 @@ class SlaCalculatorTest extends TestCase
             closedAt: now()->subHours(2),
         );
 
-        $admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
+        $admin = User::where('email', 'admin@sample.com')->firstOrFail();
 
         $html = $this->actingAs($admin)->get(route('tickets.index'))->assertOk()->getContent();
 

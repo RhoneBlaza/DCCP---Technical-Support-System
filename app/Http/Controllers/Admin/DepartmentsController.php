@@ -70,4 +70,23 @@ class DepartmentsController extends Controller
 
         return back()->with('status', 'Department updated.');
     }
+
+    public function destroy(Department $department): RedirectResponse
+    {
+        $this->authorize('delete', $department);
+
+        if ($department->users()->exists()) {
+            return back()->withErrors(['error' => 'Cannot delete department that has users assigned.']);
+        }
+
+        if ($department->tickets()->exists()) {
+            return back()->withErrors(['error' => 'Cannot delete department that has tickets associated.']);
+        }
+
+        $this->audit->log('department_deleted', $department, 'Department deleted: '.$department->name);
+
+        $department->delete();
+
+        return redirect()->route('admin.departments.index')->with('status', 'Department deleted.');
+    }
 }

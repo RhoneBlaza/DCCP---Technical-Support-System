@@ -8,6 +8,14 @@ Route::prefix('tickets')->name('tickets.')->group(function () {
     Route::get('create', [TicketsController::class, 'create'])->name('create');
     Route::post('/', [TicketsController::class, 'store'])->name('store')->middleware('throttle:20,1');
     Route::get('my-tickets', [TicketsController::class, 'myTickets'])->name('my-tickets');
+    Route::get('preview-number', [TicketsController::class, 'previewNumber'])->name('preview-number');
+    Route::get('{ticket}/edit', [TicketsController::class, 'edit'])->name('edit');
+    Route::match(['put', 'patch'], '{ticket}', [TicketsController::class, 'update'])->name('update');
+
+    // Requesters may close and reopen their own tickets, so these are gated by
+    // TicketPolicy rather than by the staff-only role middleware.
+    Route::put('{ticket}/close', [TicketsController::class, 'close'])->name('close');
+    Route::put('{ticket}/reopen', [TicketsController::class, 'reopen'])->name('reopen')->middleware('throttle:20,1');
 });
 
 Route::prefix('support')
@@ -23,8 +31,6 @@ Route::prefix('support')
         Route::put('ticket/{ticket}/priority', [TicketsController::class, 'changePriority'])->name('update-priority');
         Route::put('ticket/{ticket}/category', [TicketsController::class, 'changeCategory'])->name('update-category');
         Route::put('ticket/{ticket}/resolve', [TicketsController::class, 'resolve'])->name('resolve');
-        Route::put('ticket/{ticket}/close', [TicketsController::class, 'close'])->name('close');
-        Route::put('ticket/{ticket}/reopen', [TicketsController::class, 'reopen'])->name('reopen');
     });
 
 Route::prefix('ticket')->name('tickets.')->group(function () {

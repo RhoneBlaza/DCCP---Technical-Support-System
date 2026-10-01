@@ -15,7 +15,7 @@
     </x-page-header>
 
     <x-card class="mt-6" flush>
-        <div class="p-4 sm:p-5 border-b border-slate-100">
+        <div class="p-4 sm:p-5 border-b border-line-soft">
             <form method="GET" action="{{ route('reports.index') }}" class="flex flex-wrap items-end gap-3">
                 <div>
                     <x-form.label for="from">From</x-form.label>
@@ -40,7 +40,7 @@
             </form>
 
             @if ($dateRangeSwapped)
-                <p class="mt-3 text-sm text-amber-700 bg-amber-50 ring-1 ring-amber-200 rounded-lg px-3 py-2">
+                <p class="mt-3 text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/30 rounded-lg px-3 py-2">
                     The "From" date was after the "To" date, so the period was read as
                     {{ $from->format('M j, Y') }} – {{ $to->format('M j, Y') }}.
                 </p>
@@ -70,14 +70,14 @@
                 @if ($total === 0)
                     <x-empty-state title="Nothing to show" :description="$breakdown['empty']" />
                 @else
-                    <dl class="divide-y divide-slate-100">
+                    <dl class="divide-y divide-line-soft">
                         @foreach ($breakdown['data'] as $label => $count)
                             <div class="px-4 sm:px-5 py-3">
                                 <div class="flex items-center justify-between text-sm mb-1.5">
-                                    <dt class="truncate {{ $count === 0 ? 'text-slate-400' : 'text-slate-700' }}">{{ $label }}</dt>
-                                    <dd class="ml-2 font-semibold {{ $count === 0 ? 'text-slate-400' : 'text-slate-800' }}">{{ $count }}</dd>
+                                    <dt class="truncate {{ $count === 0 ? 'text-ink-faint' : 'text-ink' }}">{{ $label }}</dt>
+                                    <dd class="ml-2 font-semibold {{ $count === 0 ? 'text-ink-faint' : 'text-ink' }}">{{ $count }}</dd>
                                 </div>
-                                <div class="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                                <div class="h-1.5 rounded-full bg-surface-sunken overflow-hidden">
                                     <div class="h-full rounded-full bg-navy-600" style="width: {{ round(($count / $maxCol($breakdown['data'])) * 100) }}%"></div>
                                 </div>
                             </div>
@@ -94,21 +94,21 @@
                 <x-empty-state title="No resolved tickets" description="Resolution time statistics will appear once tickets are resolved." />
             @else
                 <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                    <div class="rounded-lg bg-slate-50 ring-1 ring-slate-100 p-4">
-                        <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Resolved</dt>
-                        <dd class="text-xl font-bold text-slate-800 mt-1">{{ $resolution['resolved_count'] }}</dd>
+                    <div class="rounded-lg bg-surface-muted ring-1 ring-line-soft p-4">
+                        <dt class="text-xs font-medium text-ink-subtle uppercase tracking-wide">Resolved</dt>
+                        <dd class="text-xl font-bold text-ink mt-1">{{ $resolution['resolved_count'] }}</dd>
                     </div>
-                    <div class="rounded-lg bg-slate-50 ring-1 ring-slate-100 p-4">
-                        <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Average</dt>
-                        <dd class="text-xl font-bold text-slate-800 mt-1">{{ $resolution['avg_hours'] }}<span class="text-sm font-medium text-slate-400">h</span></dd>
+                    <div class="rounded-lg bg-surface-muted ring-1 ring-line-soft p-4">
+                        <dt class="text-xs font-medium text-ink-subtle uppercase tracking-wide">Average</dt>
+                        <dd class="text-xl font-bold text-ink mt-1">{{ $resolution['avg_hours'] }}<span class="text-sm font-medium text-ink-faint">h</span></dd>
                     </div>
-                    <div class="rounded-lg bg-slate-50 ring-1 ring-slate-100 p-4">
-                        <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Fastest</dt>
-                        <dd class="text-xl font-bold text-green-600 mt-1">{{ $resolution['fastest_hours'] }}<span class="text-sm font-medium text-slate-400">h</span></dd>
+                    <div class="rounded-lg bg-surface-muted ring-1 ring-line-soft p-4">
+                        <dt class="text-xs font-medium text-ink-subtle uppercase tracking-wide">Fastest</dt>
+                        <dd class="text-xl font-bold text-green-600 dark:text-green-300 mt-1">{{ $resolution['fastest_hours'] }}<span class="text-sm font-medium text-ink-faint">h</span></dd>
                     </div>
-                    <div class="rounded-lg bg-slate-50 ring-1 ring-slate-100 p-4">
-                        <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Slowest</dt>
-                        <dd class="text-xl font-bold text-red-600 mt-1">{{ $resolution['slowest_hours'] }}<span class="text-sm font-medium text-slate-400">h</span></dd>
+                    <div class="rounded-lg bg-surface-muted ring-1 ring-line-soft p-4">
+                        <dt class="text-xs font-medium text-ink-subtle uppercase tracking-wide">Slowest</dt>
+                        <dd class="text-xl font-bold text-red-600 dark:text-red-400 mt-1">{{ $resolution['slowest_hours'] }}<span class="text-sm font-medium text-ink-faint">h</span></dd>
                     </div>
                 </dl>
             @endif
@@ -118,13 +118,13 @@
             @if ($topRequesters->isEmpty())
                 <x-empty-state title="No tickets" description="Requester statistics will appear once tickets are created." />
             @else
-                <ol class="divide-y divide-slate-100">
+                <ol class="divide-y divide-line-soft">
                     @foreach ($topRequesters as $entry)
                         <li class="flex items-center gap-3 px-4 sm:px-5 py-3">
-                            <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-navy-100 text-navy-800 text-xs font-semibold shrink-0">{{ $entry->requester?->initials ?? '?' }}</span>
+                            <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-navy-100 dark:bg-navy-800 text-navy-800 dark:text-navy-100 text-xs font-semibold shrink-0">{{ $entry->requester?->initials ?? '?' }}</span>
                             <div class="min-w-0 flex-1">
-                                <p class="text-sm font-medium text-slate-800 truncate">{{ $entry->requester?->full_name ?? 'Unknown' }}</p>
-                                <p class="text-xs text-slate-400 truncate">{{ $entry->requester?->department?->name ?? '' }}</p>
+                                <p class="text-sm font-medium text-ink truncate">{{ $entry->requester?->full_name ?? 'Unknown' }}</p>
+                                <p class="text-xs text-ink-faint truncate">{{ $entry->requester?->department?->name ?? '' }}</p>
                             </div>
                             <x-badge color="blue">{{ $entry->total }} ticket{{ $entry->total === 1 ? '' : 's' }}</x-badge>
                         </li>

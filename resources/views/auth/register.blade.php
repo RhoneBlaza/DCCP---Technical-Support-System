@@ -28,7 +28,7 @@
         <div>
             <x-form.label for="id_image" required>ID photo / scan</x-form.label>
             <x-form.input name="id_image" type="file" accept=".jpg,.jpeg,.png,.pdf" required />
-            <p class="text-xs text-slate-400 mt-1">JPG, PNG or PDF up to 5 MB. Only administrators can view this document.</p>
+            <p class="text-xs text-ink-faint mt-1">JPG, PNG or PDF up to 5 MB. Only administrators can view this document.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <div class="rounded-lg bg-slate-50 border border-slate-200 p-4">
+        <div class="rounded-lg bg-surface-muted border border-line p-4">
             @php
                 $organization = settings('organization_name', 'the institution');
                 $privacyLabel = "I consent to the collection, processing and retention of my personal data and ID document for the purpose of verifying my account under {$organization}'s data privacy policy. I understand only authorized administrators may view it.";
@@ -97,13 +97,13 @@
             <x-form.checkbox name="privacy_consent" :label="$privacyLabel" />
         </div>
 
-        <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-navy-700 text-white text-sm font-semibold hover:bg-navy-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500 transition-colors">
+        <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-navy-700 text-white text-sm font-semibold hover:bg-navy-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy-500 dark:focus:ring-navy-400 transition-colors">
             Request account
         </button>
     </form>
 
-    <p class="text-center text-sm text-slate-500 mt-4">
+    <p class="text-center text-sm text-ink-subtle mt-4">
         Already have an account?
-        <a href="{{ route('login') }}" class="font-medium text-navy-700 hover:underline">Sign in</a>
+        <a href="{{ route('login') }}" class="font-medium text-navy-700 dark:text-navy-200 hover:underline">Sign in</a>
     </p>
 @endsection

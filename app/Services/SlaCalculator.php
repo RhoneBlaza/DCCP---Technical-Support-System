@@ -99,7 +99,7 @@ class SlaCalculator
 
     protected function isFinished(Ticket $ticket): bool
     {
-        return in_array($ticket->status->type, [TicketStatusType::Resolved->value, TicketStatusType::Closed->value], true);
+        return in_array($ticket->status->type, [TicketStatusType::Resolved, TicketStatusType::Closed], true);
     }
 
     protected function humanDuration(DateInterval $diff, bool $absolute = false): string

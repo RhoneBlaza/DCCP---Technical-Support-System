@@ -30,8 +30,8 @@ class TicketNotificationTest extends TestCase
 
         $this->seed();
 
-        $this->requester = User::where('email', 'juan@dccp-bangued.test')->firstOrFail();
-        $this->support = User::where('email', 'support@dccp-bangued.test')->firstOrFail();
+        $this->requester = User::where('email', 'requester@sample.com')->firstOrFail();
+        $this->support = User::where('email', 'support@sample.com')->firstOrFail();
     }
 
     public function test_requester_ticket_creation_notifies_support_after_commit(): void

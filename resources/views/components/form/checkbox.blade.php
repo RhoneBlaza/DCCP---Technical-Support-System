@@ -12,8 +12,8 @@
         name="{{ $name }}"
         value="{{ $value }}"
         @checked(old($name, $checked)) 
-        {{ $attributes->merge(['class' => 'mt-0.5 h-4 w-4 rounded border-slate-300 text-navy-600 focus:ring-navy-500 focus:ring-2']) }}>
-    <span class="text-sm text-slate-700">{{ $label }}</span>
+        {{ $attributes->merge(['class' => 'mt-0.5 h-4 w-4 rounded border-line-strong text-navy-600 dark:text-navy-300 focus:ring-navy-500 dark:focus:ring-navy-400 focus:ring-2']) }}>
+    <span class="text-sm text-ink">{{ $label }}</span>
 </label>
 @if ($showError)
     <x-form.error :name="$name" />

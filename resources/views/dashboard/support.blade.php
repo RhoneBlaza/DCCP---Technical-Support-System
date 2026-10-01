@@ -20,7 +20,7 @@
         <x-card title="Unassigned tickets" description="Open tickets waiting for a support staff assignment">
             @if ($unassigned_tickets->isNotEmpty())
                 <x-tickets.table :tickets="$unassigned_tickets" />
-                <div class="mt-4 pt-4 border-t border-slate-100">
+                <div class="mt-4 pt-4 border-t border-line-soft">
                     <x-button.secondary :href="route('support.queue')">Open support queue</x-button.secondary>
                 </div>
             @else
@@ -31,7 +31,7 @@
         <x-card title="My assigned tickets" description="Tickets currently assigned to you">
             @if ($my_assigned_tickets->isNotEmpty())
                 <x-tickets.table :tickets="$my_assigned_tickets" />
-                <div class="mt-4 pt-4 border-t border-slate-100">
+                <div class="mt-4 pt-4 border-t border-line-soft">
                     <x-button.secondary :href="route('support.my-tickets')">View all my tickets</x-button.secondary>
                 </div>
             @else
@@ -42,7 +42,7 @@
         <x-card title="Overdue tickets" description="Tickets past their SLA due date" class="xl:col-span-2">
             @if ($overdue_tickets->isNotEmpty())
                 <x-tickets.table :tickets="$overdue_tickets" />
-                <div class="mt-4 pt-4 border-t border-slate-100">
+                <div class="mt-4 pt-4 border-t border-line-soft">
                     <x-button.secondary :href="route('support.queue')">Review the queue</x-button.secondary>
                 </div>
             @else

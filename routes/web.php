@@ -47,6 +47,7 @@ Route::middleware(['auth', 'active', 'must.change.password'])->group(function ()
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::post('theme', [ProfileController::class, 'updateTheme'])->name('theme');
     });
 
     Route::prefix('account')->name('profile.change-password')->group(function () {

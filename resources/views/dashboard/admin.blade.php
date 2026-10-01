@@ -45,9 +45,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <x-card title="Tickets created" description="Volume over the last 7 or 30 days" x-data="trendToggle()">
             <x-slot:actions>
-                <div class="flex items-center rounded-lg bg-slate-200 p-0.5 text-xs font-medium">
-                    <button type="button" @click="setRange(7)" :class="range === 7 ? 'bg-navy-700 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'" :aria-pressed="range === 7" class="px-2.5 py-1 rounded-md transition-colors">7 days</button>
-                    <button type="button" @click="setRange(30)" :class="range === 30 ? 'bg-navy-700 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'" :aria-pressed="range === 30" class="px-2.5 py-1 rounded-md transition-colors">30 days</button>
+                <div class="flex items-center rounded-lg bg-surface-active p-0.5 text-xs font-medium">
+                    <button type="button" @click="setRange(7)" :class="range === 7 ? 'bg-navy-700 text-white shadow-sm' : 'text-ink-muted hover:text-ink'" :aria-pressed="range === 7" class="px-2.5 py-1 rounded-md transition-colors">7 days</button>
+                    <button type="button" @click="setRange(30)" :class="range === 30 ? 'bg-navy-700 text-white shadow-sm' : 'text-ink-muted hover:text-ink'" :aria-pressed="range === 30" class="px-2.5 py-1 rounded-md transition-colors">30 days</button>
                 </div>
             </x-slot:actions>
             <div class="h-64">
@@ -110,6 +110,24 @@
             }
 
             document.addEventListener('DOMContentLoaded', () => {
+                // Chart.js paints to a canvas and cannot read CSS variables, so the
+                // theme colours are resolved from the tokens instead. They are read
+                // at draw time and re-applied whenever the theme changes.
+                const token = (name, fallback) => {
+                    const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+                    return value === '' ? fallback : value;
+                };
+
+                const palette = () => ({
+                    ink: token('--t-ink-muted', '#475569'),
+                    faint: token('--t-ink-faint', '#64748b'),
+                    grid: token('--t-line-soft', '#f1f5f9'),
+                    surface: token('--t-surface', '#ffffff'),
+                    brand: token('--color-navy-700', '#254875'),
+                    brandSoft: token('--color-navy-500', '#3a70ab'),
+                });
+
                 const barValues = {
                     id: 'barValues',
                     afterDatasetsDraw(chart) {
@@ -128,7 +146,7 @@
                                 if (horizontal) {
                                     if (bar.x + 6 + ctx.measureText(text).width <= chartArea.right) {
                                         ctx.textAlign = 'left';
-                                        ctx.fillStyle = '#475569';
+                                        ctx.fillStyle = palette().ink;
                                         ctx.fillText(text, bar.x + 6, bar.y + 4);
                                     } else {
                                         ctx.textAlign = 'right';
@@ -137,7 +155,7 @@
                                     }
                                 } else if (bar.y - 8 >= chartArea.top) {
                                     ctx.textAlign = 'center';
-                                    ctx.fillStyle = '#475569';
+                                    ctx.fillStyle = palette().ink;
                                     ctx.fillText(text, bar.x, bar.y - 6);
                                 } else {
                                     ctx.textAlign = 'center';
@@ -159,6 +177,8 @@
 
                 const trendCanvas = document.getElementById('trendChart');
                 if (trendCanvas) {
+                    const theme = palette();
+
                     charts.trend = new Chart(trendCanvas, {
                     type: 'line',
                     data: {
@@ -166,12 +186,12 @@
                         datasets: [{
                             label: 'Tickets',
                             data: @json($trendCounts30),
-                            borderColor: '#254875',
+                            borderColor: theme.brand,
                             backgroundColor: 'rgba(37, 72, 117, 0.08)',
                             fill: true,
                             tension: 0.3,
                             pointRadius: 2,
-                            pointBackgroundColor: '#254875',
+                            pointBackgroundColor: theme.brand,
                         }],
                     },
                     options: {
@@ -179,8 +199,8 @@
                         maintainAspectRatio: false,
                         plugins: { legend: { display: false } },
                         scales: {
-                            x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 11 } } },
-                            y: { beginAtZero: true, ticks: { precision: 0, color: '#94a3b8', font: { size: 11 } }, grid: { color: '#f1f5f9' } },
+                            x: { grid: { display: false }, ticks: { color: theme.faint, font: { size: 11 } } },
+                            y: { beginAtZero: true, ticks: { precision: 0, color: theme.faint, font: { size: 11 } }, grid: { color: theme.grid } },
                         },
                     },
                 });
@@ -188,6 +208,8 @@
 
                 const statusCanvas = document.getElementById('statusChart');
                 if (statusCanvas) {
+                    const theme = palette();
+
                     charts.status = new Chart(statusCanvas, {
                     type: 'doughnut',
                     data: {
@@ -196,7 +218,7 @@
                             data: @json($statusCounts),
                             backgroundColor: @json($statusColors),
                             borderWidth: 1,
-                            borderColor: '#ffffff',
+                            borderColor: theme.surface,
                         }],
                     },
                     options: {
@@ -206,7 +228,7 @@
                         plugins: {
                             legend: {
                                 position: 'right',
-                                labels: { boxWidth: 12, boxHeight: 12, padding: 12, color: '#334155', font: { size: 11 } },
+                                labels: { boxWidth: 12, boxHeight: 12, padding: 12, color: theme.ink, font: { size: 11 } },
                             },
                         },
                     },
@@ -215,6 +237,8 @@
 
                 const categoryCanvas = document.getElementById('categoryChart');
                 if (categoryCanvas) {
+                    const theme = palette();
+
                     charts.category = new Chart(categoryCanvas, {
                         type: 'bar',
                         data: {
@@ -222,7 +246,7 @@
                             datasets: [{
                                 label: 'Tickets',
                                 data: @json($categoryCounts),
-                                backgroundColor: '#254875',
+                                backgroundColor: theme.brand,
                                 borderRadius: 4,
                                 maxBarThickness: 20,
                             }],
@@ -239,11 +263,10 @@
                             scales: {
                                 x: {
                                     beginAtZero: true,
-                                    suggestedMax: @json($category_max ?? null),
-                                    ticks: { precision: 0, color: '#94a3b8', font: { size: 11 } },
-                                    grid: { color: '#f1f5f9' }
+                                    ticks: { precision: 0, color: theme.faint, font: { size: 11 } },
+                                    grid: { color: theme.grid }
                                 },
-                                y: { grid: { display: false }, ticks: { color: '#475569', font: { size: 11 } } },
+                                y: { grid: { display: false }, ticks: { color: theme.ink, font: { size: 11 } } },
                             },
                         },
                     });
@@ -251,6 +274,8 @@
 
                 const workloadCanvas = document.getElementById('workloadChart');
                 if (workloadCanvas) {
+                    const theme = palette();
+
                     charts.workload = new Chart(workloadCanvas, {
                         type: 'bar',
                         data: {
@@ -258,7 +283,7 @@
                             datasets: [{
                                 label: 'Open tickets',
                                 data: @json($workloadCounts),
-                                backgroundColor: '#3a70ab',
+                                backgroundColor: theme.brandSoft,
                                 borderRadius: 4,
                                 maxBarThickness: 32,
                             }],
@@ -272,12 +297,49 @@
                                 barValues,
                             },
                             scales: {
-                                x: { grid: { display: false }, ticks: { color: '#475569', font: { size: 11 } } },
-                                y: { beginAtZero: true, ticks: { precision: 0, color: '#94a3b8', font: { size: 11 } }, grid: { color: '#f1f5f9' } },
+                                x: { grid: { display: false }, ticks: { color: theme.ink, font: { size: 11 } } },
+                                y: { beginAtZero: true, ticks: { precision: 0, color: theme.faint, font: { size: 11 } }, grid: { color: theme.grid } },
                             },
                         },
                     });
                 }
+
+                // Re-read the tokens on every theme change: an already painted
+                // canvas keeps its colours until it is told otherwise, so light
+                // grid lines would otherwise sit on a dark background.
+                window.addEventListener('theme-changed', () => {
+                    const colours = palette();
+
+                    Object.values(charts).forEach((chart) => {
+                        const dataset = chart.data.datasets[0];
+
+                        if (chart.config.type === 'line') {
+                            dataset.borderColor = colours.brand;
+                            dataset.pointBackgroundColor = colours.brand;
+                        }
+
+                        if (chart.config.type === 'bar') {
+                            dataset.backgroundColor = chart.options.indexAxis === 'y' ? colours.brand : colours.brandSoft;
+                        }
+
+                        if (chart.config.type === 'doughnut') {
+                            dataset.borderColor = colours.surface;
+                            chart.options.plugins.legend.labels.color = colours.ink;
+                        }
+
+                        Object.values(chart.options.scales || {}).forEach((scale) => {
+                            if (scale.ticks) {
+                                scale.ticks.color = scale.grid && scale.grid.display === false ? colours.ink : colours.faint;
+                            }
+
+                            if (scale.grid && scale.grid.display !== false) {
+                                scale.grid.color = colours.grid;
+                            }
+                        });
+
+                        chart.update('none');
+                    });
+                });
             });
         </script>
     @endpush

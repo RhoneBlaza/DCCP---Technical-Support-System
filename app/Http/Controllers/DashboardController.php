@@ -83,29 +83,12 @@ class DashboardController extends Controller
         }
 
         $categoryData = $this->groupBy('category');
-        // Calculate a nice maximum for the category chart axis
-        $rawMax = $categoryData ? max($categoryData) : 0;
-        if ($rawMax > 0) {
-            // Round up to a nice number for better axis scaling
-            if ($rawMax < 5) {
-                $categoryMax = 5;
-            } elseif ($rawMax < 20) {
-                $categoryMax = ceil($rawMax / 5) * 5;
-            } elseif ($rawMax < 100) {
-                $categoryMax = ceil($rawMax / 10) * 10;
-            } else {
-                $categoryMax = ceil($rawMax / 20) * 20;
-            }
-        } else {
-            $categoryMax = 0;
-        }
 
         return view('dashboard.admin', [
             'stats' => $stats,
             'status_data' => $status_data,
             'status_colors' => $status_colors,
             'category_data' => $categoryData,
-            'category_max' => $categoryMax,
             'department_data' => $this->groupBy('department'),
             'priority_data' => $this->groupBy('priority'),
             'time_data' => $this->groupByDay(),

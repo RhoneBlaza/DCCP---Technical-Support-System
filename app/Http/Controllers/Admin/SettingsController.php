@@ -49,7 +49,6 @@ class SettingsController extends Controller
             'max_attachment_kb' => 'integer',
             'allowed_attachment_extensions' => 'json',
             'max_attachments_per_message' => 'integer',
-            'reopen_window_days' => 'integer',
             'auto_close_days' => 'integer',
             'audit_retention_days' => 'integer',
             'notification_retention_days' => 'integer',

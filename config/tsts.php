@@ -22,7 +22,6 @@ return [
         'max_attachment_kb' => ['value' => '5120', 'type' => 'integer'],
         'allowed_attachment_extensions' => ['value' => ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'xlsx', 'txt'], 'type' => 'json'],
         'max_attachments_per_message' => ['value' => '5', 'type' => 'integer'],
-        'reopen_window_days' => ['value' => '7', 'type' => 'integer'],
         'auto_close_days' => ['value' => '5', 'type' => 'integer'],
         'audit_retention_days' => ['value' => '365', 'type' => 'integer'],
         'notification_retention_days' => ['value' => '90', 'type' => 'integer'],

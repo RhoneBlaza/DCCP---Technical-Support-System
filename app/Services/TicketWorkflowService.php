@@ -25,6 +25,7 @@ use App\Notifications\TicketReopenedNotification;
 use App\Notifications\TicketResolvedNotification;
 use App\Notifications\TicketStatusChangedNotification;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -82,6 +83,72 @@ class TicketWorkflowService
 
             $this->notifySupport($ticket, $actor, new NewTicketSupportNotification($ticket));
             $ticket->requester->notify(new NewTicketRequesterNotification($ticket));
+
+            return $ticket;
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Edits
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Apply an edit to a ticket's own fields.
+     *
+     * Status, priority and category have dedicated actions (and their own
+     * policies) elsewhere in this service, so they are intentionally not
+     * editable through this path. Only the descriptive fields are updated here,
+     * which keeps the timeline and audit log honest.
+     *
+     * @param  array<string, mixed>  $data
+     * @param  array<int, UploadedFile>  $files
+     */
+    public function update(Ticket $ticket, User $actor, array $data, array $files = []): Ticket
+    {
+        return DB::transaction(function () use ($ticket, $actor, $data, $files) {
+            $attributes = [
+                'requester_id' => $data['requester_id'],
+                'department_id' => $data['department_id'],
+                'category_id' => $data['category_id'],
+                'subject' => $data['subject'],
+                'description' => $data['description'],
+                'location' => $data['location'] ?? null,
+                'device_type' => $data['device_type'] ?? null,
+                'asset_number' => $data['asset_number'] ?? null,
+                'contact_number' => $data['contact_number'] ?? null,
+            ];
+
+            $changed = [];
+
+            foreach ($attributes as $key => $value) {
+                if ($ticket->{$key} !== $value) {
+                    $changed[$key] = ['from' => $ticket->{$key}, 'to' => $value];
+                }
+            }
+
+            if ($changed !== []) {
+                $ticket->fill($attributes)->save();
+
+                $this->track($ticket, ActivityType::Updated, $actor,
+                    'Ticket details updated',
+                    null,
+                    ['fields' => array_keys($changed)]);
+
+                $this->auditLogger->log('ticket_updated', $ticket,
+                    'Ticket '.$ticket->ticket_number.' details updated',
+                    collect($changed)->map(fn ($change) => $change['from'])->all(),
+                    collect($changed)->map(fn ($change) => $change['to'])->all());
+            }
+
+            if (filled($files)) {
+                $this->attachmentService->store($ticket, $files, $actor);
+            }
+
+            if (isset($data['priority_id']) && (int) $data['priority_id'] !== $ticket->priority_id) {
+                $this->changePriority($ticket, $actor, Priority::findOrFail((int) $data['priority_id']));
+            }
 
             return $ticket;
         });
@@ -344,8 +411,6 @@ class TicketWorkflowService
 
             $old = $ticket->status;
             $this->applyStatus($ticket, $this->requireStatus('resolved'));
-            $ticket->resolved_at = now();
-            $ticket->save();
             $this->markFirstResponse($ticket);
 
             $this->track($ticket, ActivityType::Resolved, $actor,
@@ -566,8 +631,8 @@ class TicketWorkflowService
 
     protected function assertReopenAllowed(Ticket $ticket, User $actor): void
     {
-        if (! in_array($ticket->status->type, [TicketStatusType::Resolved, TicketStatusType::Closed], true)) {
-            throw WorkflowException::message('Only resolved or closed tickets can be reopened.');
+        if (! $ticket->is_resolved) {
+            throw WorkflowException::message('Only resolved tickets can be reopened.');
         }
 
         if ($actor->isStaff()) {
@@ -576,14 +641,6 @@ class TicketWorkflowService
 
         if ($ticket->requester_id !== $actor->id) {
             throw WorkflowException::message('You can only reopen your own tickets.');
-        }
-
-        if ($ticket->is_closed) {
-            $windowDays = (new SettingsService)->int('reopen_window_days', 7);
-
-            if ($ticket->closed_at === null || $ticket->closed_at->copy()->addDays($windowDays)->isPast()) {
-                throw WorkflowException::message('This closed ticket is outside the reopen window. Please contact the IT Helpdesk if you need further assistance.');
-            }
         }
     }
 

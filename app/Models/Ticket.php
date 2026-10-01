@@ -39,6 +39,8 @@ class Ticket extends Model
         'closed_at',
         'reopen_count',
         'overdue_notified_at',
+        'status_updated_at',
+        'reopened_at',
     ];
 
     protected function casts(): array
@@ -49,6 +51,8 @@ class Ticket extends Model
             'first_response_at' => 'datetime',
             'resolved_at' => 'datetime',
             'closed_at' => 'datetime',
+            'status_updated_at' => 'datetime',
+            'reopened_at' => 'datetime',
             'overdue_notified_at' => 'datetime',
             'reopen_count' => 'integer',
         ];

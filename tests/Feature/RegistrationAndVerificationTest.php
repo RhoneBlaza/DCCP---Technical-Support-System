@@ -36,8 +36,8 @@ class RegistrationAndVerificationTest extends TestCase
 
         $this->seed();
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
-        $this->support = User::where('email', 'support@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
+        $this->support = User::where('email', 'support@sample.com')->firstOrFail();
 
         Storage::fake('private');
         Notification::fake();
@@ -258,12 +258,12 @@ class RegistrationAndVerificationTest extends TestCase
 
     public function test_seeded_demo_users_can_log_in(): void
     {
-        foreach (['admin@dccp-bangued.test', 'support@dccp-bangued.test', 'juan@dccp-bangued.test'] as $email) {
+        foreach (['admin@sample.com', 'support@sample.com', 'requester@sample.com'] as $email) {
             $user = User::where('email', $email)->firstOrFail();
 
             $this->post(route('login.attempt'), [
                 'email' => $email,
-                'password' => 'ChangeMe123!',
+                'password' => 'Admin123',
             ])->assertRedirect(route('dashboard'));
 
             $this->assertAuthenticatedAs($user);

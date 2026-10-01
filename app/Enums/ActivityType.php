@@ -17,6 +17,7 @@ enum ActivityType: string
     case Resolved = 'resolved';
     case Closed = 'closed';
     case Reopened = 'reopened';
+    case Updated = 'updated';
 
     public function label(): string
     {
@@ -34,6 +35,7 @@ enum ActivityType: string
             self::Resolved => 'Resolved',
             self::Closed => 'Closed',
             self::Reopened => 'Reopened',
+            self::Updated => 'Details updated',
         };
     }
 }

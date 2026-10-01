@@ -2,10 +2,10 @@
 
 @php
     $styles = [
-        'success' => 'bg-green-50 text-green-800 ring-green-200',
-        'error' => 'bg-red-50 text-red-800 ring-red-200',
-        'warning' => 'bg-yellow-50 text-yellow-800 ring-yellow-200',
-        'info' => 'bg-navy-50 text-navy-800 ring-navy-200',
+        'success' => 'bg-green-50 dark:bg-green-500/10 text-green-800 dark:text-green-300 ring-green-200 dark:ring-green-500/30',
+        'error' => 'bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-300 ring-red-200 dark:ring-red-500/30',
+        'warning' => 'bg-yellow-50 dark:bg-yellow-500/10 text-yellow-800 dark:text-yellow-300 ring-yellow-200 dark:ring-yellow-500/30',
+        'info' => 'bg-navy-50 dark:bg-navy-500/10 text-navy-800 dark:text-navy-100 ring-navy-200 dark:ring-navy-500/30',
     ];
     $icons = [
         'success' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',

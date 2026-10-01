@@ -30,4 +30,20 @@ class TicketNumberGenerator
             return sprintf('%s-%d-%06d', $prefix, $year, $number);
         });
     }
+
+    /**
+     * Get a preview of the next ticket number without incrementing the sequence.
+     *
+     * Format: {PREFIX}-{YYYY}-{NNNNNN}, sequence resets each year.
+     */
+    public function preview(): string
+    {
+        $prefix = strtoupper((string) (new SettingsService)->get('ticket_prefix'));
+        $year = (int) now()->year;
+
+        $sequence = TicketSequence::find($year);
+        $nextNumber = ($sequence ? $sequence->last_number + 1 : 1);
+
+        return sprintf('%s-%d-%06d', $prefix, $year, $nextNumber);
+    }
 }

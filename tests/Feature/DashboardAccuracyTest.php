@@ -32,7 +32,7 @@ class DashboardAccuracyTest extends TestCase
         // ticket table so every count below can be asserted exactly.
         Ticket::query()->delete();
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
     }
 
     public function test_the_status_legend_lists_only_real_statuses_and_the_counts_add_up(): void

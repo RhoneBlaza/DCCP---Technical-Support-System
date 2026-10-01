@@ -24,9 +24,9 @@ abstract class SecurityTestCase extends TestCase
 
         $this->seed();
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
-        $this->support = User::where('email', 'support@dccp-bangued.test')->firstOrFail();
-        $this->requester = User::where('email', 'juan@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
+        $this->support = User::where('email', 'support@sample.com')->firstOrFail();
+        $this->requester = User::where('email', 'requester@sample.com')->firstOrFail();
 
         Storage::fake('private');
         Notification::fake();

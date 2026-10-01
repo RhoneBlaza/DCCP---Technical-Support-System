@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Ticket;
 use App\Models\User;
-use App\Services\SettingsService;
 
 class TicketPolicy
 {
@@ -73,9 +72,17 @@ class TicketPolicy
         return $user->isStaff() && ! $ticket->isClosed;
     }
 
-    public function changeCategory(User $user, Ticket $ticket): bool
+    public function update(User $user, Ticket $ticket): bool
     {
-        return $user->isStaff() && ! $ticket->isClosed;
+        if ($user->isStaff()) {
+            return ! $ticket->isClosed;
+        }
+
+        if ($ticket->requester_id !== $user->id) {
+            abort(404, 'Ticket not found.');
+        }
+
+        return ! $ticket->isClosed;
     }
 
     public function reply(User $user, Ticket $ticket): bool
@@ -114,28 +121,19 @@ class TicketPolicy
         return $ticket->requester_id === $user->id;
     }
 
+    /**
+     * Reopening is only meaningful while the ticket sits in Resolved, and only
+     * the owner or staff may do it. Both the UI button and the workflow assert
+     * the same rule, so the button can never advertise an action the server
+     * will reject.
+     */
     public function reopen(User $user, Ticket $ticket): bool
     {
-        if ($user->isStaff()) {
-            return true;
-        }
-
-        if ($ticket->requester_id !== $user->id) {
+        if (! $ticket->isResolved) {
             return false;
         }
 
-        if (! $ticket->isResolved && ! $ticket->isClosed) {
-            return false;
-        }
-
-        if (! $ticket->isClosed) {
-            return true;
-        }
-
-        $windowDays = (new SettingsService)->int('reopen_window_days', 7);
-
-        return $ticket->closed_at !== null
-            && $ticket->closed_at->copy()->addDays($windowDays)->isFuture();
+        return $user->isStaff() || $ticket->requester_id === $user->id;
     }
 
     public function delete(User $user, Ticket $ticket): bool

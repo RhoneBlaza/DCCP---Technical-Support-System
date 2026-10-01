@@ -32,13 +32,13 @@ class DemoSeeder extends Seeder
         }
 
         $admin = User::updateOrCreate(
-            ['email' => 'admin@dccp-bangued.test'],
+            ['email' => 'admin@sample.com'],
             [
                 'first_name' => 'System',
                 'last_name' => 'Administrator',
                 'employee_id' => 'EMP-0001',
                 'role' => UserRole::Admin,
-                'password' => Hash::make('ChangeMe123!'),
+                'password' => Hash::make('Admin123'),
                 'is_active' => true,
                 'account_status' => AccountStatus::Approved,
                 'must_change_password' => false,
@@ -46,14 +46,14 @@ class DemoSeeder extends Seeder
         );
 
         $support = User::updateOrCreate(
-            ['email' => 'support@dccp-bangued.test'],
+            ['email' => 'support@sample.com'],
             [
                 'first_name' => 'Technical',
                 'last_name' => 'Support',
                 'employee_id' => 'EMP-0002',
                 'role' => UserRole::Support,
                 'department_id' => Department::where('code', 'ICT')->value('id'),
-                'password' => Hash::make('ChangeMe123!'),
+                'password' => Hash::make('Admin123'),
                 'is_active' => true,
                 'account_status' => AccountStatus::Approved,
                 'must_change_password' => false,
@@ -61,14 +61,14 @@ class DemoSeeder extends Seeder
         );
 
         $juan = User::updateOrCreate(
-            ['email' => 'juan@dccp-bangued.test'],
+            ['email' => 'requester@sample.com'],
             [
                 'first_name' => 'Juan',
                 'last_name' => 'Dela Cruz',
                 'employee_id' => 'EMP-0003',
                 'role' => UserRole::Requester,
                 'department_id' => Department::where('code', 'FIN')->value('id'),
-                'password' => Hash::make('ChangeMe123!'),
+                'password' => Hash::make('Admin123'),
                 'is_active' => true,
                 'account_status' => AccountStatus::Approved,
                 'must_change_password' => false,

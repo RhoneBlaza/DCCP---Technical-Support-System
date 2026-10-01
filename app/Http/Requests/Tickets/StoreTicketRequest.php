@@ -19,7 +19,7 @@ class StoreTicketRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'requester_id' => ['nullable', 'integer', Rule::exists('users', 'id')->where('is_active', true)],
+            'requester_id' => ['required', 'integer', Rule::exists('users', 'id')->where('is_active', true)],
             'department_id' => ['required', 'integer', Rule::exists('departments', 'id')],
             'category_id' => ['required', 'integer', Rule::exists('categories', 'id')],
             'priority_id' => ['nullable', 'integer', Rule::exists('priorities', 'id')],
@@ -31,10 +31,6 @@ class StoreTicketRequest extends FormRequest
             'contact_number' => ['nullable', 'string', 'max:50'],
             'duplicate_ack' => ['nullable', 'boolean'],
         ];
-
-        if ($this->user()->isStaff()) {
-            $rules['requester_id'] = ['required', 'integer', Rule::exists('users', 'id')->where('is_active', true)];
-        }
 
         return array_merge($rules, (new AttachmentService)->validationRules());
     }
@@ -58,8 +54,13 @@ class StoreTicketRequest extends FormRequest
                     return;
                 }
 
+                $requesterId = $this->input('requester_id');
+                if (! $requesterId || ! is_numeric($requesterId)) {
+                    return;
+                }
+
                 $duplicate = app(DuplicateTicketDetector::class)->findDuplicate(
-                    (int) $this->input('requester_id'),
+                    (int) $requesterId,
                     (int) $this->input('category_id'),
                     (string) $this->input('subject'),
                 );

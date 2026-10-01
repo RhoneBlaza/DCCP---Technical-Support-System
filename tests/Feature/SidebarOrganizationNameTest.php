@@ -23,7 +23,7 @@ class SidebarOrganizationNameTest extends TestCase
 
         $this->seed();
 
-        $this->admin = User::where('email', 'admin@dccp-bangued.test')->firstOrFail();
+        $this->admin = User::where('email', 'admin@sample.com')->firstOrFail();
     }
 
     public function test_a_long_organization_name_wraps_instead_of_being_clipped(): void

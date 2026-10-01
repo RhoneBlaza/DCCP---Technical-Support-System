@@ -112,7 +112,7 @@ class RegisterController extends Controller
                     $user,
                     'Account registration requested by '.$user->full_name.'.',
                     null,
-                    $user->first(['employee_id', 'email', 'department_id', 'position'])->toArray(),
+                    $user->first(['employee_id', 'email', 'department_id', 'position', 'role'])->toArray(),
                     $user->id
                 );
             }

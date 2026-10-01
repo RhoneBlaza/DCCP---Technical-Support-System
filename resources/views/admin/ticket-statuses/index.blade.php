@@ -55,7 +55,7 @@
 
         <div class="lg:col-span-2 space-y-6">
             <x-card flush>
-                <div class="p-4 sm:p-5 border-b border-slate-100">
+                <div class="p-4 sm:p-5 border-b border-line-soft">
                     <x-list-search :route="route('admin.statuses.index')" placeholder="Search by name or key" />
                 </div>
                 <div class="px-4 sm:px-5 py-3">
@@ -68,7 +68,7 @@
                     <div class="overflow-x-auto">
                         <table class="min-w-full text-sm">
                             <thead>
-                                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-slate-500 border-b border-slate-200 bg-slate-50/80">
+                                <tr class="text-left text-xs font-semibold uppercase tracking-wide text-ink-subtle border-b border-line bg-surface-muted/80">
                                     <th class="px-4 py-2.5">Name</th>
                                     <th class="px-4 py-2.5">Key</th>
                                     <th class="px-4 py-2.5">Type</th>
@@ -78,9 +78,9 @@
                                     <th class="px-4 py-2.5 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-slate-100">
+                            <tbody class="bg-surface divide-y divide-line-soft">
                                 @foreach ($statuses as $status)
-                                    <tr class="hover:bg-slate-50 transition-colors">
+                                    <tr class="hover:bg-surface-muted transition-colors">
                                         <td class="px-4 py-2.5">
                                             <div class="flex items-center gap-2">
                                                 <x-badge :color="$status->color">{{ $status->name }}</x-badge>
@@ -89,14 +89,14 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        <td class="px-4 py-2.5 text-sm font-mono text-slate-600">{{ $status->key }}</td>
-                                        <td class="px-4 py-2.5 text-sm text-slate-600">{{ $status->type->label() }}</td>
-                                        <td class="px-4 py-2.5 text-sm text-slate-600 hidden sm:table-cell">{{ $status->sort_order }}</td>
+                                        <td class="px-4 py-2.5 text-sm font-mono text-ink-muted">{{ $status->key }}</td>
+                                        <td class="px-4 py-2.5 text-sm text-ink-muted">{{ $status->type->label() }}</td>
+                                        <td class="px-4 py-2.5 text-sm text-ink-muted hidden sm:table-cell">{{ $status->sort_order }}</td>
                                         <td class="px-4 py-2.5 hidden md:table-cell">
                                             @if ($status->pauses_sla)
                                                 <x-badge color="yellow">Pauses</x-badge>
                                             @else
-                                                <span class="text-slate-400">—</span>
+                                                <span class="text-ink-faint">—</span>
                                             @endif
                                         </td>
                                         <td class="px-4 py-2.5">
@@ -119,7 +119,7 @@
                                                         type="submit"
                                                         @disabled($deactivationBlocker !== null)
                                                         title="{{ $deactivationBlocker ?? ($status->is_active ? 'Deactivate this status' : 'Activate this status') }}"
-                                                        class="px-3 py-1.5 rounded-lg text-xs font-medium ring-1 ring-slate-300 text-slate-600 hover:bg-slate-50 disabled:text-slate-400 disabled:bg-slate-100 disabled:cursor-not-allowed disabled:ring-slate-200">
+                                                        class="px-3 py-1.5 rounded-lg text-xs font-medium ring-1 ring-line-strong text-ink-muted hover:bg-surface-muted disabled:text-ink-faint disabled:bg-surface-sunken disabled:cursor-not-allowed disabled:ring-line">
                                                         {{ $status->is_active ? 'Deactivate' : 'Activate' }}
                                                     </button>
                                                 </form>
@@ -132,7 +132,7 @@
                     </div>
 
                     @if ($statuses->hasPages())
-                        <div class="px-5 py-4 border-t border-slate-100">
+                        <div class="px-5 py-4 border-t border-line-soft">
                             {{ $statuses->links() }}
                         </div>
                     @endif
@@ -179,7 +179,7 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-end gap-2 pt-1">
-                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100" @click="$store.modals.close('edit-status-{{ $status->id }}')">Cancel</button>
+                    <button type="button" class="px-4 py-2 rounded-lg text-sm font-medium text-ink-muted hover:bg-surface-sunken" @click="$store.modals.close('edit-status-{{ $status->id }}')">Cancel</button>
                     <x-button.primary type="submit">Save changes</x-button.primary>
                 </div>
             </form>
